@@ -106,7 +106,7 @@ export default function GradientBackground() {
       </div>
 
       {/* 4. Glowing Planet Crescent / Earth Horizon (Fixed to viewport) */}
-      <div style={styles.crescentContainer}>
+      <div style={styles.crescentContainer} className="planet-crescent-container">
         <svg
           style={styles.crescentSvg}
           viewBox="0 0 1440 300"
@@ -215,6 +215,11 @@ export default function GradientBackground() {
           0% { transform: translate(0, 0); }
           50% { transform: translate(12px, -8px); }
           100% { transform: translate(0, 0); }
+        }
+        @media (max-width: 768px) {
+          .planet-crescent-container {
+            height: 160px !important;
+          }
         }
       `}</style>
     </div>
