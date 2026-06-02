@@ -133,7 +133,7 @@ export default function Hero({ onOpenCommandMenu }) {
         .hero-cta-primary:hover svg { transform: translateX(3px); }
 
         .hero-section {
-          padding: 120px 24px 80px;
+          padding: 80px 24px 80px;
         }
 
         .hero-inner {
@@ -164,7 +164,7 @@ export default function Hero({ onOpenCommandMenu }) {
 
         @media (max-width: 768px) {
           .hero-section {
-            padding: 96px 16px 90px !important;
+            padding: 72px 16px 90px !important;
           }
 
           .hero-inner {
