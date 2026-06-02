@@ -21,6 +21,7 @@ import DashboardMockup from './components/DashboardMockup';
 import GovChainSimulator from './components/GovChainSimulator';
 import Skills         from './components/Skills';
 import CommandMenu    from './components/CommandMenu';
+import Gallery        from './components/Gallery';
 
 // ── Reusable section label + heading ─────────────────────────────────────────
 function SectionHeader({ label, title, center = false }) {
@@ -270,6 +271,9 @@ export default function App() {
             </div>
           ))}
         </div>
+
+        {/* Gallery Section */}
+        <Gallery />
       </section>
 
       {/* ───────────────────────────── Leadership ─────────────────────────────── */}
