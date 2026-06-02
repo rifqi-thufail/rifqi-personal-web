@@ -164,7 +164,7 @@ export default function Hero({ onOpenCommandMenu }) {
 
         @media (max-width: 768px) {
           .hero-section {
-            padding: 96px 16px 48px !important;
+            padding: 96px 16px 90px !important;
           }
 
           .hero-inner {
@@ -185,9 +185,15 @@ export default function Hero({ onOpenCommandMenu }) {
 
           .hero-stats {
             grid-template-columns: repeat(2, 1fr) !important;
-            row-gap: 24px !important;
+            border-top: none !important;
+            padding: 24px 16px !important;
+            background: rgba(255, 255, 255, 0.02) !important;
+            backdrop-filter: blur(12px) !important;
+            -webkit-backdrop-filter: blur(12px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.06) !important;
+            border-radius: 16px !important;
+            row-gap: 20px !important;
             column-gap: 0 !important;
-            padding-top: 24px !important;
           }
 
           .hero-stat {
