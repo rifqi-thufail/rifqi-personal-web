@@ -62,18 +62,18 @@ export default function Skills() {
       {/* Grid */}
       <div style={st.grid}>
         {CATEGORIES.map((cat) => (
-          <div key={cat.title} className="glass-card" style={st.card} onMouseMove={glow}>
-            <div style={st.cardHead}>
-              <h3 style={st.cardTitle}>{cat.title}</h3>
-              <span style={st.cardSub}>{cat.sub}</span>
+          <div key={cat.title} className="glass-card skill-card" style={st.card} onMouseMove={glow}>
+            <div className="skill-card-head" style={st.cardHead}>
+              <h3 className="skill-card-title" style={st.cardTitle}>{cat.title}</h3>
+              <span className="skill-card-sub" style={st.cardSub}>{cat.sub}</span>
             </div>
-            <div style={st.items}>
+            <div className="skill-items" style={st.items}>
               {cat.items.map((item) => (
-                <div key={item.name} style={st.item}>
-                  <div style={st.itemDot} />
+                <div key={item.name} className="skill-item" style={st.item}>
+                  <div className="skill-item-dot" style={st.itemDot} />
                   <div>
-                    <span style={st.itemName}>{item.name}</span>
-                    <span style={st.itemDetail}>{item.detail}</span>
+                    <span className="skill-item-name" style={st.itemName}>{item.name}</span>
+                    <span className="skill-item-detail" style={st.itemDetail}>{item.detail}</span>
                   </div>
                 </div>
               ))}
@@ -81,6 +81,29 @@ export default function Skills() {
           </div>
         ))}
       </div>
+
+      <style>{`
+        @media (max-width: 576px) {
+          .skill-card {
+            padding: 18px 16px !important;
+            gap: 14px !important;
+          }
+          .skill-card-head {
+            padding-bottom: 10px !important;
+          }
+          .skill-items {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 12px 16px !important;
+          }
+          .skill-item {
+            gap: 8px !important;
+          }
+          .skill-item-dot {
+            margin-top: 6px !important;
+          }
+        }
+      `}</style>
     </section>
   );
 }

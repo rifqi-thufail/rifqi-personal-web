@@ -41,21 +41,21 @@ export default function DashboardMockup() {
   const currentData = view === 'hq' ? hqData : branchData;
 
   return (
-    <div className="glass-card" style={styles.container}>
+    <div className="glass-card db-container" style={styles.container}>
       {/* Dashboard Top Header */}
-      <div style={styles.header}>
-        <div style={styles.headerLeft}>
+      <div className="db-header" style={styles.header}>
+        <div className="db-header-left" style={styles.headerLeft}>
           <div style={styles.iconCircle}>
             <BarChart3 size={18} style={{ color: '#ffffff' }} />
           </div>
           <div>
-            <h3 style={styles.title}>Balanced Scorecard KPI Dashboard</h3>
-            <p style={styles.subtitle}>PT. United Tractors Indonesia (UNTR) • PowerBI Simulation</p>
+            <h3 className="db-title" style={styles.title}>Balanced Scorecard KPI Dashboard</h3>
+            <p className="db-subtitle" style={styles.subtitle}>PT. United Tractors Indonesia (UNTR) • PowerBI Simulation</p>
           </div>
         </div>
 
         {/* View Switcher Tabs */}
-        <div style={styles.tabContainer}>
+        <div className="db-tab-container" style={styles.tabContainer}>
           <button
             onClick={() => setView('hq')}
             style={{
@@ -64,6 +64,7 @@ export default function DashboardMockup() {
               color: view === 'hq' ? '#ffffff' : 'var(--text-secondary)',
               borderColor: view === 'hq' ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
             }}
+            className="db-tab-btn"
           >
             Strategic HQ View
           </button>
@@ -75,6 +76,7 @@ export default function DashboardMockup() {
               color: view === 'branch' ? '#ffffff' : 'var(--text-secondary)',
               borderColor: view === 'branch' ? 'rgba(255, 255, 255, 0.15)' : 'transparent',
             }}
+            className="db-tab-btn"
           >
             Operational Branch View
           </button>
@@ -82,18 +84,19 @@ export default function DashboardMockup() {
       </div>
 
       {/* Grid of Key Scorecard Perspectives */}
-      <div style={styles.grid}>
+      <div className="db-grid" style={styles.grid}>
         {currentData.metrics.map((metric, idx) => (
           <motion.div
             key={metric.label}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4, delay: idx * 0.05 }}
+            className="db-metric-card"
             style={styles.metricCard}
           >
-            <span style={styles.metricLabel}>{metric.label}</span>
+            <span className="db-metric-label" style={styles.metricLabel}>{metric.label}</span>
             <div style={styles.metricValueRow}>
-              <span style={styles.metricValue}>{metric.value}</span>
+              <span className="db-metric-value" style={styles.metricValue}>{metric.value}</span>
               <span style={{
                 ...styles.metricChange,
                 color: metric.status === 'above' ? 'var(--accent-teal)' : '#f87171'
@@ -101,7 +104,7 @@ export default function DashboardMockup() {
                 {metric.change}
               </span>
             </div>
-            <div style={styles.metricFooter}>
+            <div className="db-metric-footer" style={styles.metricFooter}>
               <span>Target: {metric.target}</span>
               <span style={{
                 ...styles.statusIndicator,
@@ -116,16 +119,16 @@ export default function DashboardMockup() {
       </div>
 
       {/* Main Chart Panel */}
-      <div style={styles.chartPanel}>
-        <div style={styles.chartHeader}>
+      <div className="db-chart-panel" style={styles.chartPanel}>
+        <div className="db-chart-header" style={styles.chartHeader}>
           <div style={styles.chartHeaderLeft}>
             <TrendingUp size={16} style={{ color: 'var(--accent-cyan)' }} />
             <span style={styles.chartTitle}>{view === 'hq' ? 'HQ Core Strategic Indexes' : 'Branch Productivity Index'}</span>
           </div>
-          <span style={styles.chartSub}>Jan - Jun 2026 Target Tracker</span>
+          <span style={styles.chartSub}>{view === 'hq' ? 'Jan - Dec Target Tracker' : 'Jan - Jun Target Tracker'}</span>
         </div>
 
-        <div style={styles.chartArea}>
+        <div className="db-chart-area" style={styles.chartArea}>
           <div style={styles.yAxis}>
             <span>100%</span>
             <span>75%</span>
@@ -161,7 +164,7 @@ export default function DashboardMockup() {
       </div>
 
       {/* Meta/Description Footer */}
-      <div style={styles.footer}>
+      <div className="db-footer" style={styles.footer}>
         <div style={styles.footerItem}>
           <Layers size={14} style={{ color: 'var(--text-muted)' }} />
           <span>Merged 4 perspectives into a single unified dashboard view</span>
@@ -171,6 +174,69 @@ export default function DashboardMockup() {
           <span>Real-time KPI calculations aligned with PT. United Tractors framework</span>
         </div>
       </div>
+
+      <style>{`
+        @media (max-width: 576px) {
+          .db-container {
+            padding: 16px !important;
+            gap: 16px !important;
+          }
+          .db-header {
+            flex-direction: column !important;
+            align-items: stretch !important;
+            gap: 12px !important;
+            padding-bottom: 16px !important;
+          }
+          .db-tab-container {
+            width: 100% !important;
+          }
+          .db-tab-btn {
+            flex: 1 !important;
+            text-align: center !important;
+            padding: 6px 8px !important;
+            font-size: 0.7rem !important;
+          }
+          .db-grid {
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 10px !important;
+          }
+          .db-metric-card {
+            padding: 12px !important;
+            gap: 6px !important;
+          }
+          .db-metric-value {
+            font-size: 1.25rem !important;
+          }
+          .db-metric-label {
+            font-size: 0.68rem !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+          }
+          .db-metric-footer {
+            font-size: 0.65rem !important;
+            padding-top: 6px !important;
+            flex-wrap: wrap !important;
+            gap: 4px !important;
+          }
+          .db-chart-panel {
+            padding: 14px !important;
+          }
+          .db-chart-header {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 4px !important;
+            margin-bottom: 16px !important;
+          }
+          .db-chart-area {
+            height: 140px !important;
+          }
+          .db-footer {
+            gap: 10px !important;
+            padding-top: 12px !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }
