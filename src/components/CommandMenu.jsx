@@ -204,7 +204,7 @@ const styles = {
     border: 'none',
     outline: 'none',
     color: '#ffffff',
-    fontSize: '0.9rem',
+    fontSize: 'var(--font-size-sm)',
     fontFamily: 'var(--font-sans)',
   },
   closeBtn: {
@@ -247,11 +247,11 @@ const styles = {
     justifyContent: 'center',
   },
   itemLabel: {
-    fontSize: '0.85rem',
+    fontSize: 'var(--font-size-sm)',
     fontWeight: 500,
   },
   itemCategory: {
-    fontSize: '0.65rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'rgba(255,255,255,0.25)',
     fontFamily: 'monospace',
     letterSpacing: '0.06em',
@@ -260,7 +260,7 @@ const styles = {
   emptyState: {
     padding: '32px 0',
     textAlign: 'center',
-    fontSize: '0.85rem',
+    fontSize: 'var(--font-size-sm)',
     color: 'rgba(255,255,255,0.3)',
   },
   footer: {
@@ -270,7 +270,7 @@ const styles = {
     padding: '12px 20px',
     borderTop: '1px solid rgba(255, 255, 255, 0.05)',
     background: 'rgba(255,255,255,0.02)',
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'rgba(255,255,255,0.3)',
   },
   kbd: {
@@ -280,6 +280,6 @@ const styles = {
     padding: '1px 4px',
     margin: '0 2px',
     fontFamily: 'var(--font-mono)',
-    fontSize: '0.65rem',
+    fontSize: 'var(--font-size-xs)',
   },
 };

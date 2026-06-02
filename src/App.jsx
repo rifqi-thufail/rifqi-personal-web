@@ -32,7 +32,7 @@ function SectionHeader({ label, title, center = false }) {
   );
 }
 const sh = {
-  heading: { fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em' }
+  heading: { fontSize: 'var(--font-size-2xl)', fontWeight: 800, color: '#ffffff', letterSpacing: '-0.03em' }
 };
 
 // ── Mouse-tracking glow handler ───────────────────────────────────────────────
@@ -542,24 +542,24 @@ const ORGS = [
 const s = {
   split: { display: 'flex', gap: '48px', flexWrap: 'wrap' },
   col:   { flex: '1 1 360px', display: 'flex', flexDirection: 'column' },
-  body:  { fontSize: '1rem', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)' },
+  body:  { fontSize: 'var(--font-size-base)', lineHeight: 1.75, color: 'rgba(255,255,255,0.5)' },
   divider: { height: '1px', background: 'rgba(255,255,255,0.07)', margin: '20px 0' },
   contactRow: { display: 'flex', gap: '10px', flexWrap: 'wrap' },
 
   // Education
   eduCard: { padding: '20px' },
   eduTop:  { display: 'flex', gap: '12px', alignItems: 'flex-start', marginBottom: '10px' },
-  eduTitle: { fontSize: '0.9rem', fontWeight: 700, color: '#ffffff', marginBottom: '2px' },
-  eduLoc:  { fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)' },
-  eduDeg:  { fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: '6px' },
+  eduTitle: { fontSize: 'var(--font-size-sm)', fontWeight: 700, color: '#ffffff', marginBottom: '2px' },
+  eduLoc:  { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.35)' },
+  eduDeg:  { fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'rgba(255,255,255,0.75)', marginBottom: '6px' },
   badgeRow: { display: 'flex', gap: '8px', marginTop: '10px', flexWrap: 'wrap' },
   cgpaBadge: {
     background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', fontWeight: 600, color: 'rgba(255,255,255,0.7)',
+    borderRadius: '4px', padding: '2px 8px', fontSize: 'var(--font-size-xs)', fontWeight: 600, color: 'rgba(255,255,255,0.7)',
   },
   deanBadge: {
     background: 'rgba(167,139,250,0.08)', border: '1px solid rgba(167,139,250,0.2)',
-    borderRadius: '4px', padding: '2px 8px', fontSize: '0.7rem', fontWeight: 600, color: 'rgba(167,139,250,0.85)',
+    borderRadius: '4px', padding: '2px 8px', fontSize: 'var(--font-size-xs)', fontWeight: 600, color: 'rgba(167,139,250,0.85)',
   },
 
   // Timeline
@@ -574,14 +574,14 @@ const s = {
     marginTop: '8px', flexShrink: 0,
     boxShadow: '0 0 10px rgba(124,58,237,0.5)',
   },
-  expTitle: { fontSize: '1rem', fontWeight: 700, color: '#ffffff' },
-  expRole:  { fontSize: '1rem', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace', display: 'block', marginTop: '2px' },
+  expTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: '#ffffff' },
+  expRole:  { fontSize: 'var(--font-size-sm)', color: 'rgba(255,255,255,0.35)', fontFamily: 'monospace', display: 'block', marginTop: '2px' },
   bullets:  { display: 'flex', flexDirection: 'column', gap: '12px', paddingLeft: '20px', listStyle: 'none' },
-  bullet:   { display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: '1rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 },
+  bullet:   { display: 'flex', gap: '10px', alignItems: 'flex-start', fontSize: 'var(--font-size-base)', color: 'rgba(255,255,255,0.5)', lineHeight: 1.65 },
   bulletDot: { width: '4px', height: '4px', borderRadius: '50%', background: 'rgba(255,255,255,0.25)', marginTop: '9px', flexShrink: 0 },
 
   // Projects
-  projTitle: { fontSize: '1.05rem', fontWeight: 700, color: '#ffffff', marginBottom: '8px' },
+  projTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: '#ffffff', marginBottom: '8px' },
   tagRow: { display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '12px' },
 
   // Achievements
@@ -589,29 +589,29 @@ const s = {
   achCard: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '12px' },
   achTop:  { display: 'flex', justifyContent: 'space-between', alignItems: 'center' },
   achPlace: {
-    fontSize: '0.62rem', fontWeight: 700, letterSpacing: '0.08em',
+    fontSize: 'var(--font-size-xs)', fontWeight: 700, letterSpacing: '0.08em',
     border: '1px solid', borderRadius: '4px', padding: '2px 7px', textTransform: 'uppercase',
   },
-  achTime:  { fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' },
-  achTitle: { fontSize: '1.05rem', fontWeight: 700, color: '#ffffff' },
+  achTime:  { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.3)', fontFamily: 'monospace' },
+  achTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: '#ffffff' },
   achExtras: { display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '24px', justifyContent: 'center' },
   achExtra: {
     display: 'flex', alignItems: 'center', gap: '8px',
     background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.07)',
-    borderRadius: '8px', padding: '9px 14px', fontSize: '0.78rem', color: 'rgba(255,255,255,0.55)',
+    borderRadius: '8px', padding: '9px 14px', fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.55)',
   },
 
   // Orgs
   orgGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '20px' },
   orgCard: { padding: '22px', display: 'flex', flexDirection: 'column', gap: '12px' },
   orgTop:  { display: 'flex', gap: '12px', alignItems: 'flex-start' },
-  orgTitle: { fontSize: '0.92rem', fontWeight: 700, color: '#ffffff' },
-  orgRole:  { fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', display: 'block', marginTop: '2px' },
+  orgTitle: { fontSize: 'var(--font-size-sm)', fontWeight: 700, color: '#ffffff' },
+  orgRole:  { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.35)', display: 'block', marginTop: '2px' },
 
   // Contact
   contactLinks: { display: 'flex', flexDirection: 'column', gap: '14px', marginTop: '24px' },
   contactLink: { transition: 'color 0.2s ease' },
-  fLabel: { fontSize: '0.75rem', fontWeight: 500, color: 'rgba(255,255,255,0.55)' },
+  fLabel: { fontSize: 'var(--font-size-xs)', fontWeight: 500, color: 'rgba(255,255,255,0.55)' },
   successBox: {
     display: 'flex', flexDirection: 'column', alignItems: 'center',
     gap: '12px', padding: '40px 0',
@@ -632,8 +632,8 @@ const s = {
     maxWidth: '1100px', margin: '0 auto',
     display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '8px',
   },
-  footerText:  { fontSize: '0.78rem', color: 'rgba(255,255,255,0.25)' },
-  footerRight: { fontSize: '0.72rem', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace' },
+  footerText:  { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.25)' },
+  footerRight: { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.2)', fontFamily: 'monospace' },
 
   // Back to top
   bttBtn: {
@@ -643,7 +643,7 @@ const s = {
     WebkitBackdropFilter: 'blur(16px)',
     border: '1px solid rgba(255,255,255,0.1)',
     color: 'rgba(255,255,255,0.75)', padding: '9px 16px',
-    borderRadius: '100px', fontSize: '0.78rem', fontWeight: 500,
+    borderRadius: '100px', fontSize: 'var(--font-size-xs)', fontWeight: 500,
     cursor: 'pointer', transition: 'all 0.2s ease',
     boxShadow: '0 8px 24px -6px rgba(0,0,0,0.5)',
   },
