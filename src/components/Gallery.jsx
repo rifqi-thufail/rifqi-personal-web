@@ -5,9 +5,9 @@ import { ChevronLeft, ChevronRight, X, Image as ImageIcon } from 'lucide-react';
 const IMAGES = [
   { src: '/gallery/DSCF0021.webp', title: 'WOW Case Cohort Finalists', desc: 'A gather-up group photo of the Top 12 national finalists and representatives of Jasa Marga and Markplus Inc.' },
   { src: '/gallery/IMG_3437.webp', title: 'JMTC Control Room Tour', desc: 'National finalists visiting the state-of-the-art Jasamarga Traffic Monitoring Center (JMTC) at Jasa Marga HQ.' },
-  { src: '/gallery/IMG_8741.webp', title: 'Welcome to JMTC', desc: 'Our team posing on the welcome banner at Jasa Marga Traffic Monitoring Center during the site visit.' },
-  { src: '/gallery/IMG_8775.webp', title: 'Team Portrait at Jasa Marga', desc: 'Ready for the final evaluation stage representing Universiti Teknologi PETRONAS & Institut Teknologi Sepuluh Nopember.' },
-  { src: '/gallery/IMG_8886.webp', title: 'Philip Kotler Museum of Marketing', desc: 'Visiting the renowned Philip Kotler Museum of Marketing at Markplus Inc. headquarters prior to our final pitch.' },
+  { src: '/gallery/IMG_8741_v4.webp', title: 'Welcome to JMTC', desc: 'Our team posing on the welcome banner at Jasa Marga Traffic Monitoring Center during the site visit.' },
+  { src: '/gallery/IMG_8775_v4.webp', title: 'Team Portrait at Jasa Marga', desc: 'Ready for the final evaluation stage representing Universiti Teknologi PETRONAS & Institut Teknologi Sepuluh Nopember.' },
+  { src: '/gallery/IMG_8886_v4.webp', title: 'Philip Kotler Museum of Marketing', desc: 'Visiting the renowned Philip Kotler Museum of Marketing at Markplus Inc. headquarters prior to our final pitch.' },
   { src: '/gallery/IRN00501.webp', title: 'National Final Stage Pitch', desc: 'Pitching our R.O.U.T.E. marketing growth strategy to the panel of executive judges from Jasa Marga and Markplus Inc.' },
   { src: '/gallery/IRN00502.webp', title: 'Travoy App Growth Presentation', desc: 'Detailing our customer acquisition roadmap and Innovation Adoption Theory models on the main stage.' },
 ];
@@ -67,17 +67,18 @@ export default function Gallery() {
 
   return (
     <div style={styles.container}>
-      {/* Eyebrow Header */}
-      <div style={styles.sectionHeader}>
-        <div style={styles.titleRow}>
-          <ImageIcon size={18} style={{ color: 'rgba(167,139,250,0.8)' }} />
-          <h4 style={styles.sectionTitle}>Event Showcase: Travoy Jasamarga WOW Case</h4>
-        </div>
-      </div>
-
       <div style={styles.split} className="carousel-split-container">
         {/* Left Side: Caption details */}
         <div style={styles.captionCol} className="carousel-caption-side">
+          {/* Eyebrow Header */}
+          <div style={styles.sectionHeader}>
+            <span className="label-mono" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <ImageIcon size={14} style={{ color: 'rgba(167,139,250,0.8)', flexShrink: 0 }} />
+              Event Showcase
+            </span>
+            <h4 style={styles.sectionTitle}>Travoy Jasamarga WOW Case</h4>
+          </div>
+
           <div style={styles.counter}>
             <span style={styles.counterActive}>{String(activeIndex + 1).padStart(2, '0')}</span>
             <span style={styles.counterDivider}>/</span>
@@ -275,9 +276,9 @@ export default function Gallery() {
 
         .carousel-split-container {
           display: flex;
-          gap: 48px;
+          gap: 64px;
           align-items: center;
-          justify-content: space-between;
+          justify-content: center;
           margin-top: 32px;
         }
         .carousel-caption-side {
@@ -328,17 +329,16 @@ const styles = {
   },
   sectionHeader: {
     marginBottom: '8px',
-  },
-  titleRow: {
     display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
   sectionTitle: {
     fontSize: 'var(--font-size-md)',
-    fontWeight: 700,
+    fontWeight: 800,
     color: '#ffffff',
     margin: 0,
+    letterSpacing: '-0.02em',
   },
   split: {},
   captionCol: {},

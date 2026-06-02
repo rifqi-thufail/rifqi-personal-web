@@ -244,7 +244,7 @@ export default function App() {
       </section>
 
       {/* ───────────────────────────── Achievements ───────────────────────────── */}
-      <section id="achievements" className="section-container">
+      <section id="achievements" className="section-container" style={{ zIndex: 12 }}>
         <SectionHeader label="Accolades" title="National Competitions & Honours" center />
 
         <div style={s.achGrid}>

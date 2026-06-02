@@ -39,7 +39,7 @@ export default function Hero({ onOpenCommandMenu }) {
             transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
             style={styles.introHeadline}
           >
-            Hello! 👋 My name is..
+            Hello! 👋 My name is...
           </motion.h2>
           <motion.h1
             variants={VARIANTS}
