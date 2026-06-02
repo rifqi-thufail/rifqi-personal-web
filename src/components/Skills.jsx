@@ -88,22 +88,22 @@ export default function Skills() {
 const st = {
   header: { textAlign: 'center', marginBottom: '48px' },
   heading: {
-    fontSize: 'clamp(1.6rem, 3vw, 2.2rem)',
+    fontSize: 'var(--font-size-2xl)',
     fontWeight: 800, color: '#ffffff',
     letterSpacing: '-0.03em', marginBottom: '10px',
   },
-  sub: { fontSize: '0.875rem', color: 'rgba(255,255,255,0.45)', maxWidth: '500px', margin: '0 auto', lineHeight: 1.65 },
+  sub: { fontSize: 'var(--font-size-sm)', color: 'rgba(255,255,255,0.45)', maxWidth: '500px', margin: '0 auto', lineHeight: 1.65 },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' },
   card: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' },
   cardHead: { borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px' },
-  cardTitle: { fontSize: '0.95rem', fontWeight: 700, color: '#ffffff', marginBottom: '3px' },
-  cardSub: { fontSize: '0.7rem', color: 'rgba(255,255,255,0.3)' },
+  cardTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: '#ffffff', marginBottom: '3px' },
+  cardSub: { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.3)' },
   items: { display: 'flex', flexDirection: 'column', gap: '14px' },
   item: { display: 'flex', gap: '12px', alignItems: 'flex-start' },
   itemDot: {
     width: '5px', height: '5px', borderRadius: '50%',
     background: 'rgba(167,139,250,0.5)', marginTop: '8px', flexShrink: 0,
   },
-  itemName: { fontSize: '0.82rem', fontWeight: 600, color: 'rgba(255,255,255,0.8)', display: 'block' },
-  itemDetail: { fontSize: '0.72rem', color: 'rgba(255,255,255,0.35)', display: 'block', marginTop: '1px' },
+  itemName: { fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'rgba(255,255,255,0.8)', display: 'block' },
+  itemDetail: { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.35)', display: 'block', marginTop: '1px' },
 };

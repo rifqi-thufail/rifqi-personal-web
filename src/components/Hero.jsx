@@ -13,10 +13,10 @@ export default function Hero({ onOpenCommandMenu }) {
   };
 
   return (
-    <section style={styles.section}>
+    <section className="hero-section" style={styles.section}>
       {/* Background space visuals */}
       <PlanetGlow />
-      <div style={styles.inner}>
+      <div className="hero-inner" style={styles.inner}>
 
         {/* ── Eyebrow label ── */}
         <motion.div
@@ -31,24 +31,26 @@ export default function Hero({ onOpenCommandMenu }) {
         </motion.div>
 
         {/* ── Headline ── */}
-        <motion.h1  
-          variants={VARIANTS}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          style={styles.subAccent}
-        >
-          Hello! 👋 My name is..
-        </motion.h1>
-        <motion.h1
-          variants={VARIANTS}
-          initial="hidden"
-          animate="show"
-          transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-          style={styles.headline}
-        >
-          Rifqi Aufa Thufail
-        </motion.h1>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <motion.h2  
+            variants={VARIANTS}
+            initial="hidden"
+            animate="show"
+            transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            style={styles.introHeadline}
+          >
+            Hello! 👋 My name is..
+          </motion.h2>
+          <motion.h1
+            variants={VARIANTS}
+            initial="hidden"
+            animate="show"
+            transition={{ duration: 0.7, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+            style={styles.headline}
+          >
+            Rifqi Aufa Thufail
+          </motion.h1>
+        </div>
 
         {/* ── Subheadline ── */}
         <motion.p
@@ -86,6 +88,7 @@ export default function Hero({ onOpenCommandMenu }) {
           animate="show"
           transition={{ duration: 0.7, delay: 0.32, ease: [0.16, 1, 0.3, 1] }}
           style={styles.ctas}
+          className="hero-ctas"
         >
           <button
             className="btn-primary hero-cta-primary"
@@ -100,7 +103,7 @@ export default function Hero({ onOpenCommandMenu }) {
             onClick={onOpenCommandMenu}
             style={{ borderRadius: '35px' }}
           >
-<Search size={15} />
+            <Search size={15} />
             Search
             <kbd style={styles.kbdBadge}>⌘K</kbd>
           </button>
@@ -113,9 +116,10 @@ export default function Hero({ onOpenCommandMenu }) {
           animate="show"
           transition={{ duration: 0.7, delay: 0.42, ease: [0.16, 1, 0.3, 1] }}
           style={styles.stats}
+          className="hero-stats"
         >
           {STATS.map((s, i) => (
-            <div key={i} style={styles.stat}>
+            <div key={i} style={styles.stat} className="hero-stat">
               <span style={styles.statVal}>{s.value}</span>
               <span style={styles.statLabel}>{s.label}</span>
             </div>
@@ -124,11 +128,77 @@ export default function Hero({ onOpenCommandMenu }) {
 
       </div>
 
-
-
       <style>{`
         .hero-cta-primary svg { transition: transform 0.2s ease; }
         .hero-cta-primary:hover svg { transform: translateX(3px); }
+
+        .hero-section {
+          padding: 120px 24px 80px;
+        }
+
+        .hero-inner {
+          gap: 28px;
+        }
+
+        .hero-stats {
+          display: grid !important;
+          grid-template-columns: repeat(4, 1fr) !important;
+          gap: 0;
+          border-top: 1px solid rgba(255, 255, 255, 0.07);
+          padding-top: 28px;
+          width: 100%;
+        }
+
+        .hero-stat {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 0 16px;
+          border-right: 1px solid rgba(255, 255, 255, 0.07);
+          gap: 4px;
+        }
+
+        .hero-stat:last-child {
+          border-right: none;
+        }
+
+        @media (max-width: 768px) {
+          .hero-section {
+            padding: 96px 16px 48px !important;
+          }
+
+          .hero-inner {
+            gap: 24px !important;
+          }
+
+          .hero-ctas {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .hero-ctas button {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .hero-stats {
+            grid-template-columns: repeat(2, 1fr) !important;
+            row-gap: 24px !important;
+            column-gap: 0 !important;
+            padding-top: 24px !important;
+          }
+
+          .hero-stat {
+            border-right: none !important;
+            padding: 0 8px !important;
+          }
+
+          .hero-stat:nth-child(odd) {
+            border-right: 1px solid rgba(255, 255, 255, 0.07) !important;
+          }
+        }
       `}</style>
     </section>
   );
@@ -152,7 +222,6 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: '120px 24px 80px',
     position: 'relative',
     zIndex: 10,
   },
@@ -162,7 +231,6 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     textAlign: 'center',
-    gap: '28px',
     position: 'relative',
     zIndex: 2,
   },
@@ -184,20 +252,26 @@ const styles = {
     flexShrink: 0,
   },
   eyebrowText: {
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 500,
     color: 'rgba(255,255,255,0.55)',
     letterSpacing: '0.01em',
   },
+  introHeadline: {
+    fontSize: 'var(--font-size-lg)',
+    fontWeight: 600,
+    color: 'rgba(255,255,255,0.7)',
+    margin: 0,
+  },
   headline: {
-    fontSize: 'clamp(3rem, 8vw, 5.5rem)',
+    fontSize: 'var(--font-size-4xl)',
     fontWeight: 800,
     letterSpacing: '-0.04em',
-    lineHeight: 1.0,
+    lineHeight: 1.1,
     color: '#ffffff',
   },
   sub: {
-    fontSize: 'clamp(1rem, 2.2vw, 1.2rem)',
+    fontSize: 'var(--font-size-base)',
     lineHeight: 1.6,
     color: 'rgba(255,255,255,0.52)',
     maxWidth: '600px',
@@ -221,7 +295,7 @@ const styles = {
     border: '1px solid',
     borderRadius: '100px',
     padding: '5px 13px',
-    fontSize: '0.72rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 500,
     letterSpacing: '0.01em',
   },
@@ -233,7 +307,7 @@ const styles = {
     gap: '12px',
   },
   kbdBadge: {
-    fontSize: '0.68rem',
+    fontSize: 'var(--font-size-xs)',
     background: 'rgba(255,255,255,0.07)',
     border: '1px solid rgba(255,255,255,0.1)',
     borderRadius: '4px',
@@ -241,25 +315,10 @@ const styles = {
     fontFamily: 'monospace',
     color: 'rgba(255,255,255,0.45)',
   },
-  stats: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
-    gap: '0',
-    borderTop: '1px solid rgba(255,255,255,0.07)',
-    paddingTop: '28px',
-    width: '100%',
-  },
-  stat: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    padding: '0 32px',
-    borderRight: '1px solid rgba(255,255,255,0.07)',
-    gap: '4px',
-  },
+  stats: {},
+  stat: {},
   statVal: {
-    fontSize: '1.6rem',
+    fontSize: 'var(--font-size-xl)',
     fontWeight: 700,
     color: '#ffffff',
     fontFamily: "'Outfit', sans-serif",
@@ -267,11 +326,12 @@ const styles = {
     lineHeight: 1,
   },
   statLabel: {
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'rgba(255,255,255,0.4)',
     fontWeight: 500,
     letterSpacing: '0.04em',
     textTransform: 'uppercase',
     whiteSpace: 'nowrap',
+    marginTop: '4px',
   },
 };

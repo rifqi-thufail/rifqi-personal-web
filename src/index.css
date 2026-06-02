@@ -36,6 +36,32 @@
   --accent-cyan:        #60a5fa;
   --transition-smooth:  all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-snappy:  all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── Typography System (Desktop Defaults - Minimum 1rem) ── */
+  --font-size-xs:   1.0rem;   /* 16px (smallest desktop text) */
+  --font-size-sm:   1.08rem;  /* 17.3px */
+  --font-size-base: 1.18rem;  /* 19px (body) */
+  --font-size-md:   1.32rem;  /* 21.1px */
+  --font-size-lg:   1.58rem;  /* 25.3px */
+  --font-size-xl:   1.9rem;   /* 30.4px */
+  --font-size-2xl:  2.35rem;  /* 37.6px */
+  --font-size-3xl:  3.2rem;   /* 51.2px */
+  --font-size-4xl:  4.5rem;   /* 72px */
+}
+
+@media (max-width: 768px) {
+  :root {
+    /* Mobile Scale (compact and neat for small screens) */
+    --font-size-xs:   0.72rem;
+    --font-size-sm:   0.84rem;
+    --font-size-base: 0.96rem;
+    --font-size-md:   1.08rem;
+    --font-size-lg:   1.28rem;
+    --font-size-xl:   1.48rem;
+    --font-size-2xl:  1.75rem;
+    --font-size-3xl:  2.2rem;
+    --font-size-4xl:  3.0rem;
+  }
 }
 
 /* ── Reset ── */
@@ -54,7 +80,7 @@ body {
   background-color: var(--bg-primary);
   color: var(--text-secondary);
   font-family: var(--font-sans);
-  font-size: 16px;
+  font-size: var(--font-size-base);
   line-height: 1.6;
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
@@ -160,7 +186,7 @@ a {
 /* ── Label Mono ── */
 .label-mono {
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: var(--font-size-xs);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--text-muted);
@@ -176,7 +202,7 @@ a {
   color: #000000;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   padding: 10px 20px;
   border-radius: 8px;
   border: none;
@@ -199,7 +225,7 @@ a {
   color: rgba(255, 255, 255, 0.85);
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   padding: 10px 20px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -230,7 +256,7 @@ a {
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 3px 9px;
-  font-size: 0.7rem;
+  font-size: var(--font-size-xs);
   font-weight: 500;
   color: var(--text-muted);
   letter-spacing: 0.02em;
@@ -264,7 +290,7 @@ body::after {
   padding: 10px 14px;
   color: #ffffff;
   font-family: var(--font-sans);
-  font-size: 0.875rem;
+  font-size: var(--font-size-sm);
   transition: var(--transition);
   outline: none;
   resize: none;

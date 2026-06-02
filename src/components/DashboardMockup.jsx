@@ -207,12 +207,12 @@ const styles = {
     justifyContent: 'center',
   },
   title: {
-    fontSize: '1.05rem',
+    fontSize: 'var(--font-size-md)',
     fontWeight: 600,
     color: '#ffffff',
   },
   subtitle: {
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
   },
   tabContainer: {
@@ -226,7 +226,7 @@ const styles = {
     border: '1px solid transparent',
     borderRadius: '6px',
     padding: '6px 14px',
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 500,
     cursor: 'pointer',
     transition: 'var(--transition-snappy)',
@@ -246,7 +246,7 @@ const styles = {
     gap: '8px',
   },
   metricLabel: {
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
     fontWeight: 500,
   },
@@ -256,20 +256,20 @@ const styles = {
     justifyContent: 'space-between',
   },
   metricValue: {
-    fontSize: '1.5rem',
+    fontSize: 'var(--font-size-xl)',
     fontWeight: 700,
     color: '#ffffff',
     fontFamily: 'var(--font-display)',
   },
   metricChange: {
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 600,
   },
   metricFooter: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-muted)',
     borderTop: '1px solid rgba(255, 255, 255, 0.04)',
     paddingTop: '8px',
@@ -278,7 +278,7 @@ const styles = {
   statusIndicator: {
     padding: '2px 6px',
     borderRadius: '4px',
-    fontSize: '0.65rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 600,
   },
   chartPanel: {
@@ -299,12 +299,12 @@ const styles = {
     gap: '8px',
   },
   chartTitle: {
-    fontSize: '0.85rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 600,
     color: '#ffffff',
   },
   chartSub: {
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-muted)',
   },
   chartArea: {
@@ -319,7 +319,7 @@ const styles = {
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     width: '32px',
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-muted)',
     paddingRight: '8px',
   },
@@ -371,7 +371,7 @@ const styles = {
   },
   barLabel: {
     marginTop: '8px',
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
     fontWeight: 500,
   },
@@ -386,7 +386,7 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
   },
 };

@@ -201,12 +201,12 @@ const styles = {
     paddingBottom: '20px',
   },
   title: {
-    fontSize: '1.05rem',
+    fontSize: 'var(--font-size-md)',
     fontWeight: 600,
     color: '#ffffff',
   },
   subtitle: {
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
   },
   actions: {
@@ -222,7 +222,7 @@ const styles = {
     border: '1px solid #ffffff',
     borderRadius: '6px',
     padding: '6px 14px',
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 600,
     cursor: 'pointer',
     transition: 'var(--transition-smooth)',
@@ -237,7 +237,7 @@ const styles = {
     border: '1px solid var(--border-color)',
     borderRadius: '6px',
     padding: '6px 14px',
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 500,
     cursor: 'pointer',
     transition: 'var(--transition-snappy)',
@@ -251,7 +251,7 @@ const styles = {
     border: '1px solid rgba(56, 189, 248, 0.2)',
     borderRadius: '6px',
     padding: '6px 14px',
-    fontSize: '0.8rem',
+    fontSize: 'var(--font-size-xs)',
     fontWeight: 500,
   },
   pipeline: {
@@ -291,12 +291,12 @@ const styles = {
     paddingBottom: '20px',
   },
   stepLabel: {
-    fontSize: '0.85rem',
+    fontSize: 'var(--font-size-sm)',
     fontWeight: 600,
     transition: 'color 0.4s ease',
   },
   stepDesc: {
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     color: 'var(--text-secondary)',
     marginTop: '2px',
   },
@@ -307,7 +307,7 @@ const styles = {
     padding: '8px 12px',
     marginTop: '10px',
     fontFamily: 'var(--font-mono)',
-    fontSize: '0.7rem',
+    fontSize: 'var(--font-size-xs)',
     overflowX: 'auto',
   },
   verifiedBanner: {
@@ -333,12 +333,12 @@ const styles = {
     animation: 'pulse-slow 1.5s infinite alternate',
   },
   verifiedTitle: {
-    fontSize: '0.85rem',
+    fontSize: 'var(--font-size-sm)',
     fontWeight: 700,
     display: 'block',
   },
   verifiedDesc: {
-    fontSize: '0.75rem',
+    fontSize: 'var(--font-size-xs)',
     opacity: 0.8,
   },
   qrCodeWrapper: {
