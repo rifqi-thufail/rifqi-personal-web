@@ -1,3 +1,4 @@
+
 const CATEGORIES = [
   {
     title: 'Technical Competencies',
@@ -41,19 +42,20 @@ const CATEGORIES = [
   },
 ];
 
-export default function Skills() {
+export default function SkillsPage() {
   const glow = (e) => {
-    const r = e.currentTarget.getBoundingClientRect();
-    e.currentTarget.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
-    e.currentTarget.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
+    const el = e.currentTarget;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
+    el.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
   };
 
   return (
-    <section id="skills" className="section-container">
+    <section className="section-container" style={{ paddingTop: '112px' }}>
       {/* Header */}
       <div style={st.header}>
-        <span className="label-mono" style={{ display: 'block', marginBottom: '10px' }}>Skillsets</span>
-        <h2 style={st.heading}>Technical Stack & Certifications</h2>
+        <span className="label-mono">Skillsets</span>
+        <h1 style={st.heading}>Technical Stack & Certifications</h1>
         <p style={st.sub}>
           Validated academic knowledge, enterprise tooling expertise, and multi-cultural communication skills.
         </p>
@@ -81,52 +83,37 @@ export default function Skills() {
           </div>
         ))}
       </div>
-
-      <style>{`
-        @media (max-width: 576px) {
-          .skill-card {
-            padding: 18px 16px !important;
-            gap: 14px !important;
-          }
-          .skill-card-head {
-            padding-bottom: 10px !important;
-          }
-          .skill-items {
-            display: grid !important;
-            grid-template-columns: repeat(2, 1fr) !important;
-            gap: 12px 16px !important;
-          }
-          .skill-item {
-            gap: 8px !important;
-          }
-          .skill-item-dot {
-            margin-top: 6px !important;
-          }
-        }
-      `}</style>
     </section>
   );
 }
 
 const st = {
-  header: { textAlign: 'center', marginBottom: '48px' },
+  header: { textAlign: 'center', marginBottom: '56px' },
   heading: {
-    fontSize: 'var(--font-size-2xl)',
-    fontWeight: 800, color: '#ffffff',
-    letterSpacing: '-0.03em', marginBottom: '10px',
+    fontSize: 'var(--font-size-3xl)',
+    fontWeight: 800,
+    color: 'var(--text-primary)',
+    letterSpacing: '-0.04em',
+    marginBottom: '8px',
   },
-  sub: { fontSize: 'var(--font-size-sm)', color: 'rgba(255,255,255,0.45)', maxWidth: '500px', margin: '0 auto', lineHeight: 1.65 },
+  sub: {
+    fontSize: 'var(--font-size-base)',
+    color: 'var(--text-secondary)',
+    maxWidth: '540px',
+    margin: '0 auto',
+    lineHeight: 1.6
+  },
   grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' },
   card: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' },
-  cardHead: { borderBottom: '1px solid rgba(255,255,255,0.06)', paddingBottom: '14px' },
-  cardTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: '#ffffff', marginBottom: '3px' },
-  cardSub: { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.3)' },
+  cardHead: { borderBottom: '1px solid var(--border)', paddingBottom: '14px' },
+  cardTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '3px' },
+  cardSub: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' },
   items: { display: 'flex', flexDirection: 'column', gap: '14px' },
   item: { display: 'flex', gap: '12px', alignItems: 'flex-start' },
   itemDot: {
     width: '5px', height: '5px', borderRadius: '50%',
-    background: 'rgba(167,139,250,0.5)', marginTop: '8px', flexShrink: 0,
+    background: 'rgba(59, 130, 246, 0.5)', marginTop: '8px', flexShrink: 0,
   },
-  itemName: { fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'rgba(255,255,255,0.8)', display: 'block' },
-  itemDetail: { fontSize: 'var(--font-size-xs)', color: 'rgba(255,255,255,0.35)', display: 'block', marginTop: '1px' },
+  itemName: { fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--text-secondary)', display: 'block' },
+  itemDetail: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', display: 'block', marginTop: '1px' },
 };

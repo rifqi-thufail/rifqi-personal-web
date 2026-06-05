@@ -68,7 +68,7 @@ export default function GovChainSimulator() {
         <div style={styles.actions}>
           {status === 'idle' && (
             <button onClick={startSimulation} style={styles.startBtn}>
-              <Play size={14} fill="#030712" />
+              <Play size={14} fill="currentColor" />
               Issue License Permit
             </button>
           )}
@@ -117,7 +117,7 @@ export default function GovChainSimulator() {
               <div style={styles.detailsColumn}>
                 <span style={{
                   ...styles.stepLabel,
-                  color: isCompleted ? '#ffffff' : isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)'
+                  color: isCompleted ? 'var(--text-primary)' : isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)'
                 }}>
                   {step.label}
                 </span>
@@ -166,7 +166,7 @@ export default function GovChainSimulator() {
               </div>
             </div>
             <div style={styles.qrCodeWrapper}>
-              <QrCode size={40} style={{ color: '#030712' }} />
+              <QrCode size={40} style={{ color: 'var(--text-primary)' }} />
             </div>
           </motion.div>
         )}
@@ -203,7 +203,7 @@ const styles = {
   title: {
     fontSize: 'var(--font-size-md)',
     fontWeight: 600,
-    color: '#ffffff',
+    color: 'var(--text-primary)',
   },
   subtitle: {
     fontSize: 'var(--font-size-xs)',
@@ -217,23 +217,23 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    backgroundColor: '#ffffff',
-    color: '#030712',
-    border: '1px solid #ffffff',
+    backgroundColor: 'var(--btn-primary-bg)',
+    color: 'var(--btn-primary-text)',
+    border: '1px solid var(--border-hover)',
     borderRadius: '6px',
     padding: '6px 14px',
     fontSize: 'var(--font-size-xs)',
     fontWeight: 600,
     cursor: 'pointer',
     transition: 'var(--transition-smooth)',
-    boxShadow: '0 4px 12px rgba(255, 255, 255, 0.1)',
+    boxShadow: 'var(--btn-primary-shadow)',
   },
   resetBtn: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    backgroundColor: 'rgba(255, 255, 255, 0.04)',
-    color: '#ffffff',
+    backgroundColor: 'var(--glass-bg-hover)',
+    color: 'var(--text-secondary)',
     border: '1px solid var(--border-color)',
     borderRadius: '6px',
     padding: '6px 14px',
@@ -301,24 +301,26 @@ const styles = {
     marginTop: '2px',
   },
   logOutput: {
-    backgroundColor: '#000000',
-    border: '1px solid rgba(255, 255, 255, 0.05)',
+    backgroundColor: 'var(--bg-tertiary)',
+    border: '1px solid var(--border)',
     borderRadius: '6px',
     padding: '8px 12px',
     marginTop: '10px',
     fontFamily: 'var(--font-mono)',
     fontSize: 'var(--font-size-xs)',
+    color: 'var(--text-secondary)',
     overflowX: 'auto',
   },
   verifiedBanner: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    backgroundColor: '#ffffff',
+    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06))',
+    border: '1px solid rgba(16, 185, 129, 0.25)',
     borderRadius: '12px',
     padding: '16px 20px',
-    color: '#030712',
-    boxShadow: '0 10px 30px rgba(255,255,255,0.1)',
+    color: 'var(--text-primary)',
+    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.08)',
   },
   verifiedLeft: {
     display: 'flex',
@@ -336,17 +338,20 @@ const styles = {
     fontSize: 'var(--font-size-sm)',
     fontWeight: 700,
     display: 'block',
+    color: '#10b981',
   },
   verifiedDesc: {
     fontSize: 'var(--font-size-xs)',
-    opacity: 0.8,
+    color: 'var(--text-secondary)',
   },
   qrCodeWrapper: {
     padding: '6px',
-    backgroundColor: '#f3f4f6',
+    backgroundColor: 'var(--bg-tertiary)',
+    border: '1px solid var(--border)',
     borderRadius: '6px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    color: 'var(--text-primary)',
   },
 };
