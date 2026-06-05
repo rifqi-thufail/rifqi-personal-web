@@ -73,7 +73,7 @@ export default function Gallery() {
           {/* Eyebrow Header */}
           <div style={styles.sectionHeader}>
             <span className="label-mono" style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <ImageIcon size={14} style={{ color: 'rgba(167,139,250,0.8)', flexShrink: 0 }} />
+              <ImageIcon size={14} style={{ color: '#3b82f6', flexShrink: 0 }} />
               Event Showcase
             </span>
             <h4 style={styles.sectionTitle}>Travoy Jasamarga WOW Case</h4>
@@ -89,42 +89,33 @@ export default function Gallery() {
             <h3 style={styles.activeTitle}>{IMAGES[activeIndex].title}</h3>
             <p style={styles.activeDesc}>{IMAGES[activeIndex].desc}</p>
           </div>
-
-          {/* Navigation Controls */}
-          <div style={styles.navControls}>
-            <button
-              onClick={prev}
-              disabled={activeIndex === 0}
-              style={{ ...styles.carouselBtn, opacity: activeIndex === 0 ? 0.35 : 1 }}
-              className="carousel-nav-btn"
-              aria-label="Previous slide"
-            >
-              <ChevronLeft size={18} />
-            </button>
-            <button
-              onClick={next}
-              disabled={activeIndex === IMAGES.length - 1}
-              style={{ ...styles.carouselBtn, opacity: activeIndex === IMAGES.length - 1 ? 0.35 : 1 }}
-              className="carousel-nav-btn"
-              aria-label="Next slide"
-            >
-              <ChevronRight size={18} />
-            </button>
-          </div>
         </div>
 
         {/* Right Side: 3D Stacked overlapping cards */}
         <div style={styles.stackCol} className="carousel-stack-side">
+          {/* Left Arrow Button */}
+          <button
+            onClick={prev}
+            style={{
+              ...styles.carouselBtnLeft,
+              opacity: activeIndex === 0 ? 0 : 1,
+              pointerEvents: activeIndex === 0 ? 'none' : 'auto',
+            }}
+            className="carousel-nav-btn left-btn"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft size={20} />
+          </button>
+
           {IMAGES.map((img, idx) => {
             const offset = idx - activeIndex;
-            const isVisible = Math.abs(offset) <= 2; // Keep neighboring cards mounted for transition smooth rendering
             
             // Overlapping positions rotation & translations calculations
-            let xOffset = 0;
-            let scaleVal = 1;
-            let rotateVal = 0;
-            let zIndexVal = 10;
-            let opacityVal = 1;
+            let xOffset;
+            let scaleVal;
+            let rotateVal;
+            let zIndexVal;
+            let opacityVal;
 
             if (offset === 0) {
               xOffset = 0;
@@ -188,6 +179,20 @@ export default function Gallery() {
               </motion.div>
             );
           })}
+
+          {/* Right Arrow Button */}
+          <button
+            onClick={next}
+            style={{
+              ...styles.carouselBtnRight,
+              opacity: activeIndex === IMAGES.length - 1 ? 0 : 1,
+              pointerEvents: activeIndex === IMAGES.length - 1 ? 'none' : 'auto',
+            }}
+            className="carousel-nav-btn right-btn"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={20} />
+          </button>
         </div>
       </div>
 
@@ -251,35 +256,59 @@ export default function Gallery() {
           position: absolute;
           cursor: grab;
           border-radius: 20px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: #111111;
-          box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.7);
+          border: 1px solid var(--border);
+          background: var(--bg-secondary);
+          box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.4);
           overflow: hidden;
           transition: border-color 0.2s ease, box-shadow 0.2s ease;
           user-select: none;
+          width: 290px;
+          height: 360px;
         }
         .gallery-item-card:active {
           cursor: grabbing;
         }
         .gallery-item-card:hover {
-          border-color: rgba(255, 255, 255, 0.18);
-          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(124, 58, 237, 0.1) inset;
+          border-color: var(--border-hover);
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(59, 130, 246, 0.1) inset;
         }
         .carousel-nav-btn {
-          transition: all 0.2s ease;
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .carousel-nav-btn:hover:not(:disabled) {
-          background: rgba(255, 255, 255, 0.08) !important;
-          border-color: rgba(255, 255, 255, 0.18) !important;
-          color: #ffffff !important;
+        .carousel-nav-btn:hover {
+          background: var(--glass-bg-hover) !important;
+          border-color: var(--border-hover) !important;
+          color: var(--text-primary) !important;
+          transform: translateY(-50%) scale(1.08) !important;
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3) !important;
+        }
+        .carousel-nav-btn:active {
+          transform: translateY(-50%) scale(0.95) !important;
+        }
+
+        @media (max-width: 768px) {
+          .gallery-item-card {
+            width: 240px;
+            height: 300px;
+          }
+          .carousel-nav-btn {
+            width: 38px !important;
+            height: 38px !important;
+          }
+          .carousel-nav-btn.left-btn {
+            left: -12px !important;
+          }
+          .carousel-nav-btn.right-btn {
+            right: -12px !important;
+          }
         }
 
         .carousel-split-container {
           display: flex;
-          gap: 64px;
+          gap: 40px;
           align-items: center;
           justify-content: center;
-          margin-top: 32px;
+          margin-top: 0;
         }
         .carousel-caption-side {
           flex: 1;
@@ -289,8 +318,8 @@ export default function Gallery() {
           gap: 20px;
         }
         .carousel-stack-side {
-          width: 410px;
-          height: 440px;
+          width: 380px;
+          height: 390px;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -311,8 +340,8 @@ export default function Gallery() {
             gap: 16px !important;
           }
           .carousel-stack-side {
-            width: 320px !important;
-            height: 380px !important;
+            width: 300px !important;
+            height: 330px !important;
             order: 1 !important;
           }
         }
@@ -323,7 +352,6 @@ export default function Gallery() {
 
 const styles = {
   container: {
-    marginTop: '48px',
     width: '100%',
     position: 'relative',
   },
@@ -336,12 +364,17 @@ const styles = {
   sectionTitle: {
     fontSize: 'var(--font-size-md)',
     fontWeight: 800,
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     margin: 0,
     letterSpacing: '-0.02em',
   },
   split: {},
-  captionCol: {},
+  captionCol: {
+    textAlign: 'left',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
   counter: {
     display: 'flex',
     alignItems: 'baseline',
@@ -351,15 +384,15 @@ const styles = {
   counterActive: {
     fontSize: 'var(--font-size-xl)',
     fontWeight: 700,
-    color: '#ffffff',
+    color: 'var(--text-primary)',
   },
   counterDivider: {
     fontSize: 'var(--font-size-sm)',
-    color: 'rgba(255, 255, 255, 0.25)',
+    color: 'var(--text-muted)',
   },
   counterTotal: {
     fontSize: 'var(--font-size-sm)',
-    color: 'rgba(255, 255, 255, 0.4)',
+    color: 'var(--text-muted)',
   },
   textContainer: {
     display: 'flex',
@@ -369,13 +402,13 @@ const styles = {
   activeTitle: {
     fontSize: 'var(--font-size-lg)',
     fontWeight: 700,
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     margin: 0,
     letterSpacing: '-0.02em',
   },
   activeDesc: {
     fontSize: 'var(--font-size-sm)',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'var(--text-secondary)',
     margin: 0,
     lineHeight: 1.6,
   },
@@ -385,23 +418,50 @@ const styles = {
     gap: '8px',
     marginTop: '8px',
   },
-  carouselBtn: {
-    background: 'rgba(255, 255, 255, 0.03)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+  carouselBtnLeft: {
+    position: 'absolute',
+    left: '-16px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    zIndex: 20,
+    background: 'var(--bg-secondary)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid var(--border)',
     borderRadius: '50%',
-    width: '40px',
-    height: '40px',
+    width: '44px',
+    height: '44px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'rgba(255, 255, 255, 0.65)',
+    color: 'var(--text-primary)',
     cursor: 'pointer',
     outline: 'none',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
+  },
+  carouselBtnRight: {
+    position: 'absolute',
+    right: '-16px',
+    top: '50%',
+    transform: 'translateY(-50%)',
+    zIndex: 20,
+    background: 'var(--bg-secondary)',
+    backdropFilter: 'blur(8px)',
+    WebkitBackdropFilter: 'blur(8px)',
+    border: '1px solid var(--border)',
+    borderRadius: '50%',
+    width: '44px',
+    height: '44px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'var(--text-primary)',
+    cursor: 'pointer',
+    outline: 'none',
+    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.3)',
   },
   stackCol: {},
   stackCard: {
-    width: '80%',
-    height: '90%',
     borderRadius: '20px',
     overflow: 'hidden',
   },
@@ -419,7 +479,7 @@ const styles = {
     background: 'rgba(0, 0, 0, 0.75)',
     backdropFilter: 'blur(10px)',
     WebkitBackdropFilter: 'blur(10px)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    border: '1px solid var(--border)',
     borderRadius: '100px',
     padding: '6px 14px',
     fontSize: '0.7rem',
@@ -445,68 +505,59 @@ const styles = {
     position: 'absolute',
     top: '24px',
     right: '24px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'var(--glass-bg)',
+    border: '1px solid var(--border)',
     borderRadius: '50%',
     width: '44px',
     height: '44px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#ffffff',
+    color: 'rgba(255, 255, 255, 0.9)',
     cursor: 'pointer',
     zIndex: 10,
     transition: 'all 0.2s ease',
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.15)',
-    },
   },
   navBtnLeft: {
     position: 'absolute',
     left: '24px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'var(--glass-bg)',
+    border: '1px solid var(--border)',
     borderRadius: '50%',
     width: '54px',
     height: '54px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#ffffff',
+    color: 'rgba(255, 255, 255, 0.9)',
     cursor: 'pointer',
     zIndex: 10,
     transition: 'all 0.2s ease',
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.15)',
-    },
   },
   navBtnRight: {
     position: 'absolute',
     right: '24px',
-    background: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'var(--glass-bg)',
+    border: '1px solid var(--border)',
     borderRadius: '50%',
     width: '54px',
     height: '54px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    color: '#ffffff',
+    color: 'rgba(255, 255, 255, 0.9)',
     cursor: 'pointer',
     zIndex: 10,
     transition: 'all 0.2s ease',
-    '&:hover': {
-      background: 'rgba(255, 255, 255, 0.15)',
-    },
   },
   modalContent: {
     width: '100%',
     maxWidth: '900px',
     borderRadius: '16px',
     overflow: 'hidden',
-    background: '#0c0c0c',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
-    boxShadow: '0 30px 60px rgba(0,0,0,0.8)',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
+    boxShadow: '0 30px 60px rgba(0,0,0,0.6)',
     display: 'flex',
     flexDirection: 'column',
   },
@@ -514,23 +565,23 @@ const styles = {
     width: '100%',
     maxHeight: '65svh',
     objectFit: 'contain',
-    background: '#070707',
+    background: 'var(--bg-primary)',
   },
   lightboxCaption: {
     padding: '24px',
-    background: '#0e0e0e',
-    borderTop: '1px solid rgba(255, 255, 255, 0.05)',
+    background: 'var(--bg-secondary)',
+    borderTop: '1px solid var(--border)',
     position: 'relative',
   },
   captionTitle: {
     fontSize: 'var(--font-size-md)',
     fontWeight: 700,
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     margin: '0 0 6px 0',
   },
   captionDesc: {
     fontSize: 'var(--font-size-sm)',
-    color: 'rgba(255, 255, 255, 0.5)',
+    color: 'var(--text-secondary)',
     margin: 0,
     lineHeight: 1.5,
     maxWidth: '85%',
@@ -540,7 +591,7 @@ const styles = {
     right: '24px',
     top: '24px',
     fontSize: 'var(--font-size-xs)',
-    color: 'rgba(255, 255, 255, 0.3)',
+    color: 'var(--text-muted)',
     fontFamily: 'monospace',
   },
 };

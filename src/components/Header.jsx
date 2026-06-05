@@ -1,73 +1,111 @@
 import { useEffect, useState } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const NAV = [
-  { label: 'About',      href: '#about'       },
-  { label: 'Experience', href: '#experience'   },
-  { label: 'Projects',   href: '#projects'     },
-  { label: 'Skills',     href: '#skills'       },
-  { label: 'Contact',    href: '#contact'      },
+  { label: 'Home',       page: 'home'       },
+  { label: 'Experience', page: 'experience' },
+  { label: 'Portfolio',  page: 'portfolio'  },
+  { label: 'Skills',     page: 'skills'     },
 ];
 
-export default function Header({ onOpenCommandMenu }) {
-  const [scrolled,    setScrolled]    = useState(false);
-  const [progress,    setProgress]    = useState(0);
-  const [mobileOpen,  setMobileOpen]  = useState(false);
+export default function Header({ activePage, onNavigate, theme, onToggleTheme, onOpenCommandMenu }) {
+  const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 24);
-      const total = document.documentElement.scrollHeight - window.innerHeight;
-      setProgress(total > 0 ? (window.scrollY / total) * 100 : 0);
     };
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  const go = (e, href) => {
+  const navigateTo = (e, page) => {
     e.preventDefault();
     setMobileOpen(false);
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    onNavigate(page);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const getHeaderBg = () => {
+    if (mobileOpen) {
+      return theme === 'dark' ? 'rgba(10, 10, 10, 0.92)' : 'rgba(255, 255, 255, 0.92)';
+    }
+    if (theme === 'dark') {
+      return scrolled ? 'rgba(10, 10, 10, 0.65)' : 'rgba(10, 10, 10, 0.3)';
+    } else {
+      return scrolled ? 'rgba(255, 255, 255, 0.65)' : 'rgba(255, 255, 255, 0.3)';
+    }
+  };
+
+  const getHeaderBorder = () => {
+    if (theme === 'dark') {
+      return scrolled ? 'rgba(255, 255, 255, 0.08)' : 'rgba(255, 255, 255, 0.05)';
+    } else {
+      return scrolled ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.05)';
+    }
   };
 
   return (
     <>
-      <header style={{
-        ...styles.header,
-        background: scrolled
-          ? 'rgba(10, 10, 10, 0.85)'
-          : 'transparent',
-        borderBottomColor: scrolled
-          ? 'rgba(255,255,255,0.07)'
-          : 'transparent',
-        backdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-        WebkitBackdropFilter: scrolled ? 'blur(20px) saturate(180%)' : 'none',
-      }}>
-        <div style={styles.inner}>
+      <header
+        className={`floating-header ${scrolled ? 'scrolled' : ''} ${mobileOpen ? 'mobile-open' : ''}`}
+        style={{
+          background: getHeaderBg(),
+          borderColor: getHeaderBorder(),
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+          maxHeight: mobileOpen ? '450px' : '64px',
+          borderRadius: mobileOpen ? '24px' : '100px',
+          boxShadow: theme === 'dark'
+            ? (scrolled || mobileOpen ? '0 12px 30px -10px rgba(0, 0, 0, 0.5)' : '0 4px 20px -10px rgba(0, 0, 0, 0.3)')
+            : (scrolled || mobileOpen ? '0 12px 30px -10px rgba(15, 23, 42, 0.08)' : '0 4px 20px -10px rgba(15, 23, 42, 0.03)'),
+        }}
+      >
+        <div style={styles.inner} className="floating-header-inner">
 
           {/* Logo */}
-          <a href="#" onClick={(e) => go(e, 'body')} style={styles.logo}>
+          <a href="#home" onClick={(e) => navigateTo(e, 'home')} style={styles.logo}>
             <span style={styles.logoMark} />
-            <span style={styles.logoText}>Rifqi Aufa</span>
+            <span style={styles.logoText}>thufail.dev</span>
           </a>
 
           {/* Desktop nav */}
-          <nav style={styles.nav} className="header-desktop-nav">
-            {NAV.map((n) => (
-              <a
-                key={n.label}
-                href={n.href}
-                onClick={(e) => go(e, n.href)}
-                style={styles.navLink}
-                className="hdr-link"
-              >
-                {n.label}
-              </a>
-            ))}
+          <nav style={styles.nav} className="header-desktop-nav desktop-only">
+            {NAV.map((n) => {
+              const isActive = activePage === n.page;
+              return (
+                <a
+                  key={n.label}
+                  href={`#${n.page}`}
+                  onClick={(e) => navigateTo(e, n.page)}
+                  style={{
+                    ...styles.navLink,
+                    color: isActive ? '#3b82f6' : 'var(--text-secondary)',
+                    fontWeight: isActive ? 600 : 500
+                  }}
+                  className="hdr-link"
+                >
+                  {n.label}
+                </a>
+              );
+            })}
           </nav>
 
           {/* Right actions */}
-          <div style={styles.actions} className="header-actions">
+          <div style={styles.actions} className="header-actions desktop-only">
+            {/* Theme Toggle */}
+            <button
+              onClick={onToggleTheme}
+              style={styles.actionBtn}
+              className="hdr-action-btn"
+              title={theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+
+            {/* Command Menu Toggle */}
             <button
               onClick={onOpenCommandMenu}
               style={styles.cmdBtn}
@@ -80,7 +118,14 @@ export default function Header({ onOpenCommandMenu }) {
 
             <a
               href="#contact"
-              onClick={(e) => go(e, '#contact')}
+              onClick={(e) => {
+                e.preventDefault();
+                onNavigate('home');
+                setTimeout(() => {
+                  const el = document.getElementById('contact-direct');
+                  el?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
               style={styles.ctaBtn}
               className="hdr-cta"
             >
@@ -88,77 +133,220 @@ export default function Header({ onOpenCommandMenu }) {
             </a>
           </div>
 
-          {/* Mobile toggle */}
-          <button
-            onClick={() => setMobileOpen(v => !v)}
-            style={styles.mobileToggle}
-            aria-label="Toggle menu"
-            className="header-mobile-toggle"
-          >
-            {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-          </button>
+          {/* Mobile toggle & theme icon */}
+          <div style={styles.mobileRightActions} className="header-mobile-right-actions mobile-only">
+            <button
+              onClick={onToggleTheme}
+              style={styles.actionBtn}
+              className="hdr-action-btn"
+            >
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+            </button>
+
+            <button
+              onClick={() => setMobileOpen(v => !v)}
+              style={styles.mobileToggle}
+              aria-label="Toggle menu"
+              className="header-mobile-toggle mobile-burger-btn"
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', width: '20px', height: '12px' }}>
+                <div className={`burger-line line-1 ${mobileOpen ? 'open' : ''}`} />
+                <div className={`burger-line line-2 ${mobileOpen ? 'open' : ''}`} />
+                <div className={`burger-line line-3 ${mobileOpen ? 'open' : ''}`} />
+              </div>
+            </button>
+          </div>
         </div>
 
-        {/* Progress bar */}
-        <div style={styles.progressTrack}>
-          <div style={{ ...styles.progressBar, width: `${progress}%` }} />
-        </div>
+        {/* Mobile menu inside the header element */}
+        <AnimatePresence>
+          {mobileOpen && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: 'easeInOut' }}
+              style={{ ...styles.mobileMenu, overflow: 'hidden' }}
+              className="header-mobile-menu mobile-only"
+            >
+              {NAV.map((n) => {
+                const isActive = activePage === n.page;
+                return (
+                  <a
+                    key={n.label}
+                    href={`#${n.page}`}
+                    onClick={(e) => navigateTo(e, n.page)}
+                    style={{
+                      ...styles.mobileLink,
+                      color: isActive ? '#3b82f6' : 'var(--text-secondary)',
+                      fontWeight: isActive ? 600 : 500
+                    }}
+                  >
+                    {n.label}
+                  </a>
+                );
+              })}
+              <div style={styles.mobileDivider} />
+              <button
+                onClick={() => { setMobileOpen(false); onOpenCommandMenu(); }}
+                style={styles.mobileCmdBtn}
+              >
+                Command Explorer ⌘K
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-      {/* Mobile menu */}
-      {mobileOpen && (
-        <div style={styles.mobileMenu} className="header-mobile-menu">
-          {NAV.map((n) => (
-            <a
-              key={n.label}
-              href={n.href}
-              onClick={(e) => go(e, n.href)}
-              style={styles.mobileLink}
-            >
-              {n.label}
-            </a>
-          ))}
-          <div style={styles.mobileDivider} />
-          <button
-            onClick={() => { setMobileOpen(false); onOpenCommandMenu(); }}
-            style={styles.mobileCmdBtn}
-          >
-            Command Explorer ⌘K
-          </button>
-        </div>
-      )}
-
       <style>{`
+        .floating-header {
+          position: fixed;
+          left: 50%;
+          transform: translateX(-50%);
+          width: calc(100% - 32px);
+          max-width: 1000px;
+          top: 16px;
+          z-index: 1000;
+          overflow: hidden;
+          border: 1px solid transparent;
+          transition: max-height 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      border-radius 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+                      background 0.3s ease,
+                      border-color 0.3s ease,
+                      box-shadow 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+          .floating-header {
+            width: calc(100% - 24px);
+            top: 12px;
+          }
+        }
+
+        .floating-header-inner {
+          padding-left: 36px;
+          padding-right: 12px;
+        }
+        @media (max-width: 768px) {
+          .floating-header-inner {
+            padding: 0 20px;
+            gap: 16px !important;
+          }
+        }
+
+        .header-mobile-menu {
+          padding: 12px 36px 32px 36px !important;
+          display: flex !important;
+          flex-direction: column;
+          gap: 16px;
+          width: 100%;
+        }
+        @media (max-width: 768px) {
+          .header-mobile-menu {
+            padding: 12px 20px 24px 20px !important;
+          }
+        }
+
         .hdr-link {
-          opacity: 0.55;
           transition: opacity 0.2s ease, color 0.2s ease;
         }
-        .hdr-link:hover { opacity: 1; color: #ffffff; }
+        .hdr-link:hover { color: #3b82f6 !important; }
+
+        .hdr-action-btn {
+          background: var(--glass-bg);
+          border: 1px solid var(--border);
+          border-radius: 6px;
+          color: var(--text-secondary);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+          transition: all 0.2s ease;
+        }
+        .hdr-action-btn:hover {
+          background: rgba(59, 130, 246, 0.1);
+          border-color: rgba(59, 130, 246, 0.2);
+          color: #3b82f6;
+        }
 
         .hdr-cmd {
           transition: all 0.2s ease;
         }
         .hdr-cmd:hover {
-          background: rgba(255,255,255,0.08) !important;
-          border-color: rgba(255,255,255,0.18) !important;
+          background: rgba(59, 130, 246, 0.1) !important;
+          border-color: rgba(59, 130, 246, 0.2) !important;
+          color: #3b82f6 !important;
         }
 
         .hdr-cta {
           transition: all 0.2s ease;
         }
         .hdr-cta:hover {
-          background: rgba(255,255,255,0.9) !important;
-          box-shadow: 0 4px 14px -2px rgba(255,255,255,0.15) !important;
+          background: #3b82f6 !important;
+          color: #ffffff !important;
+          box-shadow: 0 4px 14px -2px rgba(59,130,246,0.3) !important;
         }
 
+        /* Responsive Visibility Control */
+        .desktop-only { display: flex !important; }
+        .mobile-only { display: none !important; }
+
         @media (max-width: 768px) {
-          .header-desktop-nav { display: none !important; }
-          .header-actions { display: none !important; }
-          .header-mobile-toggle { display: flex !important; }
+          .desktop-only { display: none !important; }
+          .mobile-only { display: flex !important; }
         }
-        @media (min-width: 769px) {
-          .header-mobile-toggle { display: none !important; }
-          .header-mobile-menu { display: none !important; }
+
+        /* Focus Ring Reset to prevent ugly outlines */
+        button:focus, a:focus {
+          outline: none !important;
+        }
+        button:focus-visible, a:focus-visible {
+          outline: 2px solid var(--accent) !important;
+          outline-offset: 2px !important;
+        }
+
+        /* Custom Animated Burger Button */
+        .mobile-burger-btn {
+          background: var(--glass-bg) !important;
+          border: 1px solid var(--border) !important;
+          border-radius: 6px !important;
+          color: var(--text-secondary) !important;
+          cursor: pointer;
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+          width: 32px !important;
+          height: 32px !important;
+          transition: all 0.2s ease !important;
+          padding: 0 !important;
+        }
+        .mobile-burger-btn:hover {
+          background: rgba(59, 130, 246, 0.1) !important;
+          border-color: rgba(59, 130, 246, 0.2) !important;
+          color: #3b82f6 !important;
+        }
+
+        .burger-line {
+          width: 20px;
+          height: 2px;
+          background-color: var(--text-primary);
+          transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease;
+          transform-origin: center;
+        }
+
+        .burger-line.line-1.open {
+          transform: translateY(5px) rotate(45deg);
+        }
+
+        .burger-line.line-2.open {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+
+        .burger-line.line-3.open {
+          transform: translateY(-5px) rotate(-45deg);
         }
       `}</style>
     </>
@@ -166,25 +354,16 @@ export default function Header({ onOpenCommandMenu }) {
 }
 
 const styles = {
-  header: {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    height: '64px',
-    borderBottom: '1px solid transparent',
-    zIndex: 1000,
-    transition: 'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
-  },
+  header: {},
   inner: {
-    maxWidth: '1100px',
-    height: '100%',
+    width: '100%',
+    height: '64px',
     margin: '0 auto',
-    padding: '0 24px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: '24px',
+    position: 'relative',
   },
   logo: {
     display: 'flex',
@@ -196,29 +375,30 @@ const styles = {
     width: '8px',
     height: '8px',
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #a78bfa, #60a5fa)',
-    boxShadow: '0 0 12px rgba(124,58,237,0.6)',
+    background: 'linear-gradient(135deg, #60a5fa, #3b82f6)',
+    boxShadow: '0 0 12px rgba(59,130,246,0.6)',
     flexShrink: 0,
   },
   logoText: {
     fontFamily: "'Outfit', sans-serif",
     fontWeight: 600,
     fontSize: 'var(--font-size-base)',
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     letterSpacing: '-0.02em',
   },
   nav: {
     display: 'flex',
     alignItems: 'center',
     gap: '28px',
-    flex: 1,
-    justifyContent: 'center',
+    position: 'absolute',
+    left: '50%',
+    transform: 'translateX(-50%)',
   },
   navLink: {
     fontSize: 'var(--font-size-sm)',
-    fontWeight: 500,
-    color: '#ffffff',
+    color: 'var(--text-secondary)',
     letterSpacing: '0.01em',
+    transition: 'color 0.2s ease',
   },
   actions: {
     display: 'flex',
@@ -226,19 +406,25 @@ const styles = {
     gap: '10px',
     flexShrink: 0,
   },
+  mobileRightActions: {
+    alignItems: 'center',
+    gap: '8px',
+  },
+  actionBtn: {},
   cmdBtn: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '3px',
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: 'var(--glass-bg)',
+    border: '1px solid var(--border)',
     borderRadius: '6px',
     padding: '5px 10px',
-    color: 'rgba(255,255,255,0.5)',
+    color: 'var(--text-secondary)',
     fontSize: 'var(--font-size-xs)',
     fontFamily: 'monospace',
     cursor: 'pointer',
     letterSpacing: '0.02em',
+    height: '32px',
   },
   cmdIcon: {
     fontSize: 'var(--font-size-xs)',
@@ -246,12 +432,12 @@ const styles = {
   ctaBtn: {
     display: 'inline-flex',
     alignItems: 'center',
-    background: '#ffffff',
-    color: '#000000',
+    background: 'var(--btn-primary-bg)',
+    color: 'var(--btn-primary-text)',
     fontSize: 'var(--font-size-sm)',
     fontWeight: 600,
     padding: '7px 16px',
-    borderRadius: '7px',
+    borderRadius: '100px',
     border: 'none',
     cursor: 'pointer',
     letterSpacing: '0.01em',
@@ -259,58 +445,35 @@ const styles = {
   mobileToggle: {
     background: 'none',
     border: 'none',
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     cursor: 'pointer',
-    padding: '8px',
+    padding: 0,
     borderRadius: '6px',
-    display: 'none',
-  },
-  mobileMenu: {
-    position: 'fixed',
-    top: '64px',
-    left: 0,
-    right: 0,
-    zIndex: 999,
-    background: 'rgba(10,10,10,0.97)',
-    borderBottom: '1px solid rgba(255,255,255,0.07)',
-    backdropFilter: 'blur(20px)',
-    padding: '24px 28px',
     display: 'flex',
-    flexDirection: 'column',
-    gap: '20px',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '32px',
+    height: '32px',
   },
+  mobileMenu: {},
   mobileLink: {
     fontSize: 'var(--font-size-base)',
-    fontWeight: 500,
-    color: 'rgba(255,255,255,0.8)',
+    color: 'var(--text-secondary)',
     padding: '4px 0',
   },
   mobileDivider: {
     height: '1px',
-    background: 'rgba(255,255,255,0.07)',
+    background: 'var(--border)',
   },
   mobileCmdBtn: {
-    background: 'rgba(255,255,255,0.05)',
-    border: '1px solid rgba(255,255,255,0.1)',
+    background: 'var(--glass-bg)',
+    border: '1px solid var(--border)',
     borderRadius: '8px',
-    color: 'rgba(255,255,255,0.7)',
+    color: 'var(--text-secondary)',
     padding: '10px 14px',
     fontSize: 'var(--font-size-sm)',
     fontFamily: 'monospace',
     cursor: 'pointer',
     textAlign: 'left',
-  },
-  progressTrack: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '1px',
-    background: 'rgba(255,255,255,0.04)',
-  },
-  progressBar: {
-    height: '100%',
-    background: 'linear-gradient(90deg, #7c3aed, #3b82f6)',
-    transition: 'width 0.1s linear',
   },
 };
