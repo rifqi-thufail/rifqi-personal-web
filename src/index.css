@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap');
 
 :root {
-  /* ── Stripe-inspired Color Palette ── */
+  /* ── Stripe-inspired Color Palette (Dark Mode Default) ── */
   --bg-primary:    #0a0a0a;
   --bg-secondary:  #111111;
   --bg-tertiary:   #1a1a1a;
@@ -13,10 +13,10 @@
   --text-secondary: rgba(255, 255, 255, 0.6);
   --text-muted:     rgba(255, 255, 255, 0.35);
 
-  /* Single accent — a restrained violet/indigo like Stripe */
-  --accent:        #7c3aed;
-  --accent-light:  #a78bfa;
-  --accent-blue:   #3b82f6;
+  /* Restrained Blue Theme accents instead of purple */
+  --accent:        #3b82f6;
+  --accent-light:  #60a5fa;
+  --accent-blue:   #2563eb;
 
   --font-sans:    'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display: 'Inter', sans-serif;
@@ -28,26 +28,77 @@
   --transition: all 0.25s var(--ease-in-out);
   --transition-slow: all 0.5s var(--ease-out-expo);
 
-  /* ── Aliases (backward compatibility) ── */
+  /* ── Aliases ── */
   --border-color:       rgba(255, 255, 255, 0.08);
-  --text-secondary:     rgba(255, 255, 255, 0.5);
-  --text-muted:         rgba(255, 255, 255, 0.3);
-  --accent-teal:        #4ade80;
-  --accent-cyan:        #60a5fa;
+  --accent-teal:        #34d399;
+  --accent-cyan:        #38bdf8;
   --transition-smooth:  all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   --transition-snappy:  all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* ── Typography System (Desktop Defaults - Minimum 1rem) ── */
-  --font-size-xs:   1.0rem;   /* 16px (smallest desktop text) */
-  --font-size-sm:   1.08rem;  /* 17.3px */
-  --font-size-base: 1.18rem;  /* 19px (body) */
-  --font-size-md:   1.32rem;  /* 21.1px */
-  --font-size-lg:   1.58rem;  /* 25.3px */
-  --font-size-xl:   1.9rem;   /* 30.4px */
-  --font-size-2xl:  2.35rem;  /* 37.6px */
-  --font-size-3xl:  3.2rem;   /* 51.2px */
-  --font-size-4xl:  4.5rem;   /* 72px */
+  /* ── Typography System ── */
+  --font-size-xs:   1.0rem;
+  --font-size-sm:   1.08rem;
+  --font-size-base: 1.18rem;
+  --font-size-md:   1.32rem;
+  --font-size-lg:   1.58rem;
+  --font-size-xl:   1.9rem;
+  --font-size-2xl:  2.35rem;
+  --font-size-3xl:  3.2rem;
+  --font-size-4xl:  4.5rem;
+
+  /* ── Glass / Surface Tokens (Dark mode defaults) ── */
+  --glass-bg:            rgba(255, 255, 255, 0.03);
+  --glass-bg-hover:      rgba(255, 255, 255, 0.06);
+  --glass-shadow-hover:
+    0 20px 40px -12px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+
+  /* ── Button Tokens (Dark mode defaults) ── */
+  --btn-primary-bg:       #ffffff;
+  --btn-primary-text:     #000000;
+  --btn-primary-bg-hover: rgba(255, 255, 255, 0.88);
+  --btn-primary-shadow:   0 8px 20px -6px rgba(255, 255, 255, 0.2);
+
+  /* ── Gradient Text Token (Dark mode defaults) ── */
+  --gradient-text: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
 }
+
+:root[data-theme="light"] {
+  /* ── Light Mode Override Color Palette ── */
+  --bg-primary:    #f8fafc;
+  --bg-secondary:  #ffffff;
+  --bg-tertiary:   #f1f5f9;
+
+  --border:        rgba(15, 23, 42, 0.08);
+  --border-hover:  rgba(15, 23, 42, 0.18);
+
+  --text-primary:   #0f172a;
+  --text-secondary: #475569;
+  --text-muted:     #94a3b8;
+
+  --accent:        #3b82f6;
+  --accent-light:  #60a5fa;
+  --accent-blue:   #1d4ed8;
+
+  --border-color:  rgba(15, 23, 42, 0.08);
+
+  /* ── Glass / Surface Tokens (Light mode overrides) ── */
+  --glass-bg:            rgba(15, 23, 42, 0.03);
+  --glass-bg-hover:      rgba(15, 23, 42, 0.06);
+  --glass-shadow-hover:
+    0 20px 40px -12px rgba(15, 23, 42, 0.12),
+    0 0 0 1px rgba(15, 23, 42, 0.06) inset;
+
+  /* ── Button Tokens (Light mode overrides) ── */
+  --btn-primary-bg:       #0f172a;
+  --btn-primary-text:     #ffffff;
+  --btn-primary-bg-hover: #1e293b;
+  --btn-primary-shadow:   0 8px 20px -6px rgba(15, 23, 42, 0.25);
+
+  /* ── Gradient Text Token (Light mode overrides) ── */
+  --gradient-text: linear-gradient(135deg, #0f172a 0%, rgba(15,23,42,0.75) 100%);
+}
+
 
 @media (max-width: 768px) {
   :root {
@@ -76,6 +127,21 @@ html {
   overflow-x: hidden;
 }
 
+/* ── Smooth Theme Transition ── */
+/* Applied globally so ALL elements transition when the theme attribute changes */
+html.theme-transitioning *,
+html.theme-transitioning *::before,
+html.theme-transitioning *::after {
+  transition:
+    background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    background 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    filter 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-secondary);
@@ -91,13 +157,13 @@ body {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--border-hover);
   border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.2); }
+::-webkit-scrollbar-thumb:hover { background: var(--border-hover); }
 
 ::selection {
-  background: rgba(124, 58, 237, 0.3);
+  background: rgba(59, 130, 246, 0.3);
   color: #ffffff;
 }
 
@@ -134,7 +200,7 @@ a {
 
 /* ── Glass Card ── */
 .glass-card {
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--glass-bg);
   border: 1px solid var(--border);
   border-radius: 16px;
   transition: var(--transition-slow);
@@ -148,7 +214,7 @@ a {
   inset: 0;
   background: radial-gradient(
     600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(124, 58, 237, 0.06),
+    rgba(59, 130, 246, 0.06),
     transparent 40%
   );
   z-index: 0;
@@ -161,16 +227,14 @@ a {
 
 .glass-card:hover {
   border-color: var(--border-hover);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--glass-bg-hover);
   transform: translateY(-2px);
-  box-shadow:
-    0 20px 40px -12px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+  box-shadow: var(--glass-shadow-hover);
 }
 
 /* ── Gradient Text Utilities ── */
 .gradient-text {
-  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
+  background: var(--gradient-text);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -198,8 +262,8 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: #ffffff;
-  color: #000000;
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--font-size-sm);
@@ -212,8 +276,8 @@ a {
 }
 
 .btn-primary:hover {
-  background: rgba(255, 255, 255, 0.88);
-  box-shadow: 0 8px 20px -6px rgba(255, 255, 255, 0.2);
+  background: var(--btn-primary-bg-hover);
+  box-shadow: var(--btn-primary-shadow);
   transform: translateY(-1px);
 }
 
@@ -221,8 +285,8 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255, 255, 255, 0.04);
-  color: rgba(255, 255, 255, 0.85);
+  background: var(--glass-bg);
+  color: var(--text-secondary);
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: var(--font-size-sm);
@@ -235,7 +299,7 @@ a {
 }
 
 .btn-secondary:hover {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--glass-bg-hover);
   border-color: var(--border-hover);
   transform: translateY(-1px);
 }
@@ -252,7 +316,7 @@ a {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   border: 1px solid var(--border);
   border-radius: 4px;
   padding: 3px 9px;
@@ -264,10 +328,10 @@ a {
 
 /* ── Back to top ── */
 .back-to-top-btn:hover {
-  border-color: rgba(255, 255, 255, 0.2) !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: var(--border-hover) !important;
+  background: var(--glass-bg-hover) !important;
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px -6px rgba(0,0,0,0.5) !important;
+  box-shadow: var(--glass-shadow-hover) !important;
 }
 
 /* ── Noise texture overlay (kills banding) ── */
@@ -279,16 +343,22 @@ body::after {
   pointer-events: none;
   z-index: 9999;
   opacity: 0.6;
+  mix-blend-mode: overlay;
+}
+
+/* Reduce noise harshness in light mode */
+:root[data-theme="light"] body::after {
+  opacity: 0.25;
 }
 
 /* ── Form inputs ── */
 .form-input {
   width: 100%;
-  background: rgba(255, 255, 255, 0.04);
+  background: var(--glass-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 10px 14px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: var(--font-size-sm);
   transition: var(--transition);
@@ -299,7 +369,182 @@ body::after {
 .form-input::placeholder { color: var(--text-muted); }
 
 .form-input:focus {
-  border-color: rgba(124, 58, 237, 0.5);
-  background: rgba(255, 255, 255, 0.06);
-  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+  border-color: rgba(59, 130, 246, 0.5);
+  background: var(--glass-bg-hover);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
+
+/* Light Mode specific background blue gradient at the bottom only */
+:root[data-theme="light"] body {
+  background: #f8fafc linear-gradient(180deg, transparent 80%, rgba(59, 130, 246, 0.08) 100%) no-repeat;
+  background-attachment: fixed;
+}
+
+/* ── Project Card Image & Hover Zoom ── */
+.project-card-image-wrapper {
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 8px;
+  position: relative;
+}
+
+.project-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-list-card:hover .project-card-image {
+  transform: scale(1.04);
+}
+
+/* ── Responsive Visibility Controls (Global) ── */
+.desktop-only {
+  display: flex !important;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-only {
+    display: flex !important;
+  }
+
+  /* Force floating overview grid to stack on mobile */
+  .floating-overview-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+
+  /* Target hobbies grid on mobile to be 2-column with tighter padding/spacing */
+  .hobbies-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .hobby-card {
+    padding: 16px !important;
+    gap: 8px !important;
+  }
+
+  .browser-mockup-content {
+    padding: 24px 16px !important;
+  }
+}
+
+.browser-mockup-content {
+  padding: 48px !important;
+}
+
+/* ── Hero Button Stacking ── */
+.hero-ctas {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 500px) {
+  .hero-ctas {
+    flex-direction: column !important;
+    width: 100%;
+    align-items: stretch !important;
+  }
+  .hero-ctas button {
+    width: 100% !important;
+    justify-content: center;
+  }
+}
+
+/* ── Partners Marquee ── */
+.marquee-container {
+  overflow: hidden;
+  user-select: none;
+  display: flex;
+  width: 100%;
+  mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  padding: 10px 0;
+}
+
+.marquee-content {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  min-width: 100%;
+  gap: 80px;
+  animation: scroll-marquee 30s linear infinite;
+  padding-right: 80px;
+}
+
+.marquee-container:hover .marquee-content {
+  animation-play-state: paused;
+}
+
+.partner-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50px;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.partner-item:hover {
+  transform: scale(1.08);
+}
+
+.partner-logo {
+  height: 38px;
+  max-width: 150px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+.partner-logo:hover {
+  opacity: 1;
+  filter: none;
+}
+
+:root[data-theme="light"] .partner-logo {
+  filter: brightness(0);
+  opacity: 0.45;
+}
+
+:root[data-theme="light"] .partner-logo:hover {
+  opacity: 0.95;
+  filter: none;
+}
+
+@keyframes scroll-marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@media (max-width: 768px) {
+  .marquee-content {
+    gap: 48px;
+    padding-right: 48px;
+    animation-duration: 22s;
+  }
+  .partner-logo {
+    height: 30px;
+    max-width: 110px;
+  }
+}
+
+
+
