@@ -1,32 +1,39 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
-/**
- * GradientBackground — NeuroNest & Stripe-inspired background.
- * Renders:
- * 1. Background radial gradient blobs (defining general color space).
- * 2. 3D perspective grid lines that converge at the horizon.
- * 3. An animated starfield containing twinkling/drifting stars.
- * 4. A gorgeous glowing planet crescent horizon at the bottom of the screen.
- */
-export default function GradientBackground() {
-  const [stars, setStars] = useState([]);
+export default function GradientBackground({ activePage = 'home', theme = 'dark' }) {
+  const [stars] = useState(() => Array.from({ length: 65 }).map((_, i) => ({
+    id: i,
+    x: Math.random() * 100, // percentage
+    y: Math.random() * 85,  // percentage
+    size: Math.random() * 2 + 1, // 1px to 3px
+    twinkleDuration: Math.random() * 4 + 2, // 2s to 6s
+    delay: Math.random() * 5,
+  })));
+  const [scrollY, setScrollY] = useState(0);
 
   useEffect(() => {
-    // Generate star coordinates & properties
-    const generatedStars = Array.from({ length: 65 }).map((_, i) => ({
-      id: i,
-      x: Math.random() * 100, // percentage
-      y: Math.random() * 85,  // percentage (keep stars mostly above the planet crescent horizon)
-      size: Math.random() * 2 + 1, // 1px to 3px
-      twinkleDuration: Math.random() * 4 + 2, // 2s to 6s
-      delay: Math.random() * 5, // 0s to 5s
-    }));
-    setStars(generatedStars);
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Calculate dynamic crescent values for scroll overlay effect
+  const isHomePage = activePage === 'home';
+  const crescentOpacity = isHomePage ? Math.max(0, 1 - scrollY / 320) : 0;
+  const crescentTranslateY = scrollY * -0.15; // Rises slightly relative to scrolling
+  const crescentScale = 1 + scrollY * 0.0001; // Expands slightly
+
+  // Set star opacity based on theme
+  const getStarOpacity = (size) => {
+    if (theme === 'light') return (size / 3) * 0.45;
+    return (size / 3) * 0.6;
+  };
+
   return (
-    <div style={styles.root} aria-hidden="true">
-      {/* 1. Global background gradient blobs */}
+    <div style={{ ...styles.root, backgroundColor: 'var(--bg-primary)' }} aria-hidden="true">
+      {/* 1. Global background gradient blobs - Blue themed */}
       <svg
         style={styles.svg}
         viewBox="0 0 1440 900"
@@ -34,27 +41,27 @@ export default function GradientBackground() {
         preserveAspectRatio="xMidYMid slice"
       >
         <defs>
-          {/* Orb 1 — purple, top-left */}
+          {/* Orb 1 — Blue */}
           <radialGradient id="orb1" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#7c3aed" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#7c3aed" stopOpacity="0"    />
+            <stop offset="0%"   stopColor="#3b82f6" stopOpacity={theme === 'dark' ? 0.25 : 0.12} />
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
           </radialGradient>
 
-          {/* Orb 2 — blue, top-right */}
+          {/* Orb 2 — Cyan */}
           <radialGradient id="orb2" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#3b82f6" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0"    />
+            <stop offset="0%"   stopColor="#38bdf8" stopOpacity={theme === 'dark' ? 0.2 : 0.08} />
+            <stop offset="100%" stopColor="#38bdf8" stopOpacity="0" />
           </radialGradient>
 
-          {/* Orb 3 — violet, center-bottom */}
+          {/* Orb 3 — Deep Blue */}
           <radialGradient id="orb3" cx="50%" cy="50%" r="50%">
-            <stop offset="0%"   stopColor="#6d28d9" stopOpacity="0.15" />
-            <stop offset="100%" stopColor="#6d28d9" stopOpacity="0"    />
+            <stop offset="0%"   stopColor="#1d4ed8" stopOpacity={theme === 'dark' ? 0.15 : 0.06} />
+            <stop offset="100%" stopColor="#1d4ed8" stopOpacity="0" />
           </radialGradient>
 
-          {/* Soft blur filter for blobs */}
-          <filter id="blur-orb" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="80" />
+          {/* Soft blur filter */}
+          <filter id="blur-orb" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="120" />
           </filter>
         </defs>
 
@@ -85,7 +92,12 @@ export default function GradientBackground() {
 
       {/* 2. 3D Perspective Grid */}
       <div style={styles.gridContainer}>
-        <div style={styles.gridPlane} />
+        <div style={{
+          ...styles.gridPlane,
+          backgroundImage: theme === 'dark'
+            ? `linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)`
+            : `linear-gradient(rgba(15, 23, 42, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(15, 23, 42, 0.03) 1px, transparent 1px)`
+        }} />
       </div>
 
       {/* 3. Starfield */}
@@ -99,113 +111,131 @@ export default function GradientBackground() {
               top: `${star.y}%`,
               width: `${star.size}px`,
               height: `${star.size}px`,
+              backgroundColor: theme === 'dark' ? '#ffffff' : '#3b82f6',
+              boxShadow: theme === 'dark' ? '0 0 4px #ffffff' : '0 0 4px rgba(59, 130, 246, 0.4)',
+              opacity: getStarOpacity(star.size),
               animation: `twinkle ${star.twinkleDuration}s infinite ease-in-out ${star.delay}s, drift 35s infinite ease-in-out`,
             }}
           />
         ))}
       </div>
 
-      {/* 4. Glowing Planet Crescent / Earth Horizon (Fixed to viewport) */}
-      <div style={styles.crescentContainer} className="planet-crescent-container">
-        <svg
-          style={styles.crescentSvg}
-          viewBox="0 0 1440 300"
-          preserveAspectRatio="none"
-          xmlns="http://www.w3.org/2000/svg"
+      {/* 4. Glowing Planet Crescent / Earth Horizon (Overlaying on scroll) */}
+      {isHomePage && (
+        <div
+          style={{
+            ...styles.crescentContainer,
+            opacity: crescentOpacity,
+            transform: `translateY(${crescentTranslateY}px) scale(${crescentScale})`,
+            pointerEvents: 'none',
+          }}
+          className="planet-crescent-container"
         >
-          <defs>
-            {/* Massive Atmospheric Glow Filter */}
-            <filter id="massive-glow" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="40" result="blur1" />
-              <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur2" />
-              <feMerge>
-                <feMergeNode in="blur1" />
-                <feMergeNode in="blur2" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+          <svg
+            style={styles.crescentSvg}
+            viewBox="0 0 1440 300"
+            preserveAspectRatio="xMidYMax slice"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              {/* Massive Atmospheric Glow Filter */}
+              <filter id="massive-glow" filterUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="40" result="blur1" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="15" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
 
-            {/* Standard Atmospheric Rim Glow Filter */}
-            <filter id="horizon-glow" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur1" />
-              <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur2" />
-              <feMerge>
-                <feMergeNode in="blur1" />
-                <feMergeNode in="blur2" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
+              {/* Standard Atmospheric Rim Glow Filter */}
+              <filter id="horizon-glow" filterUnits="userSpaceOnUse" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur1" />
+                <feGaussianBlur in="SourceGraphic" stdDeviation="3" result="blur2" />
+                <feMerge>
+                  <feMergeNode in="blur1" />
+                  <feMergeNode in="blur2" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
 
-            {/* Glowing Atmosphere Gradient */}
-            <linearGradient id="horizonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
-              <stop offset="10%" stopColor="#60a5fa" stopOpacity="0.9" />
-              <stop offset="35%" stopColor="#7c3aed" stopOpacity="0.4" />
-              <stop offset="100%" stopColor="#0a0a0a" stopOpacity="0" />
-            </linearGradient>
+              {/* Glowing Atmosphere Gradient - Blue themed */}
+              <linearGradient id="horizonGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="1" />
+                <stop offset="10%" stopColor="#38bdf8" stopOpacity="0.9" />
+                <stop offset="35%" stopColor="#3b82f6" stopOpacity="0.4" />
+                <stop offset="100%" stopColor="var(--bg-primary)" stopOpacity="0" />
+              </linearGradient>
 
-            {/* Wide Corona Gradient */}
-            <radialGradient id="coronaGrad" cx="50%" cy="100%" r="50%">
-              <stop offset="0%" stopColor="#818cf8" stopOpacity="0.25" />
-              <stop offset="60%" stopColor="#7c3aed" stopOpacity="0.08" />
-              <stop offset="100%" stopColor="#0a0a0a" stopOpacity="0" />
-            </radialGradient>
-          </defs>
+              {/* Wide Corona Gradient */}
+              <radialGradient id="coronaGrad" cx="50%" cy="100%" r="50%">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.25" />
+                <stop offset="60%" stopColor="#3b82f6" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="var(--bg-primary)" stopOpacity="0" />
+              </radialGradient>
+            </defs>
 
-          {/* Large background corona glow for massive spread */}
-          <ellipse cx="720" cy="300" rx="900" ry="250" fill="url(#coronaGrad)" filter="url(#massive-glow)" />
+            {/* Large background corona glow for massive spread */}
+            <ellipse cx="720" cy="300" rx="900" ry="250" fill="url(#coronaGrad)" filter="url(#massive-glow)" />
 
-          {/* Soft white-blue backing glow to spread light upwards */}
-          <path
-            d="M -100,300 Q 720,70 1540,300"
-            fill="none"
-            stroke="#60a5fa"
-            strokeWidth="32"
-            opacity="0.15"
-            filter="url(#massive-glow)"
-          />
+            {/* Soft white-blue backing glow to spread light upwards */}
+            <path
+              d="M -200,300 Q 720,160 1640,300"
+              fill="none"
+              stroke="#60a5fa"
+              strokeWidth="32"
+              opacity="0.15"
+              filter="url(#massive-glow)"
+            />
 
-          {/* Mid-range cyan atmosphere glow */}
-          <path
-            d="M -100,300 Q 720,70 1540,300"
-            fill="none"
-            stroke="#38bdf8"
-            strokeWidth="14"
-            opacity="0.35"
-            filter="url(#horizon-glow)"
-          />
+            {/* Mid-range cyan atmosphere glow */}
+            <path
+              d="M -200,300 Q 720,160 1640,300"
+              fill="none"
+              stroke="#38bdf8"
+              strokeWidth="14"
+              opacity="0.35"
+              filter="url(#horizon-glow)"
+            />
 
-          {/* Sharp white-blue core rim glow */}
-          <path
-            d="M -100,300 Q 720,70 1540,300"
-            fill="none"
-            stroke="url(#horizonGrad)"
-            strokeWidth="4.5"
-            filter="url(#horizon-glow)"
-          />
+            {/* Sharp white-blue core rim glow */}
+            <path
+              d="M -200,300 Q 720,160 1640,300"
+              fill="none"
+              stroke="url(#horizonGrad)"
+              strokeWidth="4.5"
+              filter="url(#horizon-glow)"
+            />
 
-          {/* Pure white horizon line (brightest peak) */}
-          <path
-            d="M -100,300 Q 720,70 1540,300"
-            fill="none"
-            stroke="#ffffff"
-            strokeWidth="1.5"
-            opacity="0.95"
-          />
+            {/* Pure white horizon line */}
+            <path
+              d="M -200,300 Q 720,160 1640,300"
+              fill="none"
+              stroke="#ffffff"
+              strokeWidth="1.5"
+              opacity="0.95"
+            />
 
-          {/* Solid dark body below the horizon */}
-          <path
-            d="M -100,300 Q 720,70 1540,300 L 1540,350 L -100,350 Z"
-            fill="#0a0a0a"
-          />
-        </svg>
-      </div>
+            {/* Solid body matching background color for occlusion */}
+            <path
+              d="M -200,300 Q 720,160 1640,300 L 1640,350 L -200,350 Z"
+              fill="var(--bg-primary)"
+            />
+          </svg>
+        </div>
+      )}
 
       {/* Subtle overlay elements for vignette and dot grid */}
-      <div style={styles.dotGrid} />
-      <div style={styles.vignette} />
+      <div style={{
+        ...styles.dotGrid,
+        backgroundImage: theme === 'dark'
+          ? `radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)`
+          : `radial-gradient(rgba(15,23,42,0.06) 1px, transparent 1px)`
+      }} />
+      {theme === 'dark' && <div style={styles.vignette} />}
 
-      {/* Global CSS declarations for background animations */}
+      {/* Twinkle keyframe style */}
       <style>{`
         @keyframes twinkle {
           0%, 100% { opacity: 0.15; }
@@ -218,7 +248,7 @@ export default function GradientBackground() {
         }
         @media (max-width: 768px) {
           .planet-crescent-container {
-            height: 160px !important;
+            height: 220px !important;
           }
         }
       `}</style>
@@ -228,10 +258,9 @@ export default function GradientBackground() {
 
 const styles = {
   root: {
-    position: 'absolute',
+    position: 'fixed',
     inset: 0,
     zIndex: 0,
-    backgroundColor: '#0a0a0a',
     overflow: 'hidden',
     pointerEvents: 'none',
   },
@@ -255,10 +284,6 @@ const styles = {
     height: '200%',
     top: '-50%',
     left: '-100%',
-    backgroundImage: `
-      linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px)
-    `,
     backgroundSize: '45px 45px',
     transform: 'rotateX(72deg)',
     transformOrigin: 'center bottom',
@@ -275,17 +300,17 @@ const styles = {
     position: 'absolute',
     backgroundColor: '#ffffff',
     borderRadius: '50%',
-    opacity: 0.5,
     boxShadow: '0 0 4px #ffffff',
   },
   crescentContainer: {
-    position: 'absolute',
-    bottom: 0,
+    position: 'absolute', // Positioned absolutely relative to the page root
+    bottom: 0,             // Anchored to the bottom of the viewport
     left: 0,
     width: '100%',
-    height: '320px',
+    height: '100svh',      // Exactly the height of the first viewport (hero section)!
     overflow: 'hidden',
-    zIndex: 4,
+    zIndex: 15,            // Higher than hero text to overlay it
+    transition: 'opacity 0.1s linear, transform 0.1s linear',
   },
   crescentSvg: {
     position: 'absolute',
@@ -297,7 +322,6 @@ const styles = {
   dotGrid: {
     position: 'absolute',
     inset: 0,
-    backgroundImage: `radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px)`,
     backgroundSize: '32px 32px',
     maskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)',
     WebkitMaskImage: 'radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%)',

@@ -3,7 +3,7 @@ import { Search, Hash, Globe, Mail, Sparkles, X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import confetti from 'canvas-confetti';
 
-export default function CommandMenu({ isOpen, onClose }) {
+export default function CommandMenu({ isOpen, onClose, onNavigate }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
@@ -16,12 +16,24 @@ export default function CommandMenu({ isOpen, onClose }) {
   }, [isOpen]);
 
   const items = [
-    { id: 'about', label: 'Scroll to: About Me', category: 'Navigation', icon: <Hash size={14} />, action: () => scrollToSection('#about') },
-    { id: 'experience', label: 'Scroll to: Work Experience', category: 'Navigation', icon: <Hash size={14} />, action: () => scrollToSection('#experience') },
-    { id: 'projects', label: 'Scroll to: Key Projects', category: 'Navigation', icon: <Hash size={14} />, action: () => scrollToSection('#projects') },
-    { id: 'skills', label: 'Scroll to: Skills & Certifications', category: 'Navigation', icon: <Hash size={14} />, action: () => scrollToSection('#skills') },
-    { id: 'contact', label: 'Scroll to: Contact Form', category: 'Navigation', icon: <Hash size={14} />, action: () => scrollToSection('#contact') },
-    { id: 'linkedin', label: 'Open: LinkedIn Profile', category: 'External Links', icon: <Globe size={14} />, action: () => window.open('https://linkedin.com/in/rifqiaufathufail/', '_blank') },
+    { id: 'home', label: 'Go to: Home Page', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('home'); onClose(); } },
+    { id: 'experience', label: 'Go to: Experience & Education', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('experience'); onClose(); } },
+    { id: 'portfolio', label: 'Go to: Portfolios & Projects', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('portfolio'); onClose(); } },
+    { id: 'skills', label: 'Go to: Skills & Certifications', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('skills'); onClose(); } },
+    {
+      id: 'contact',
+      label: 'Scroll to: Contact Info (Home)',
+      category: 'Navigation',
+      icon: <Hash size={14} />,
+      action: () => {
+        onNavigate('home');
+        onClose();
+        setTimeout(() => {
+          document.getElementById('contact-direct')?.scrollIntoView({ behavior: 'smooth' });
+        }, 150);
+      }
+    },
+    { id: 'linkedin', label: 'Open: LinkedIn Profile', category: 'External Links', icon: <Globe size={14} />, action: () => { window.open('https://linkedin.com/in/rifqiaufathufail/', '_blank'); onClose(); } },
     { id: 'email', label: 'Copy Email to Clipboard', category: 'Contact', icon: <Mail size={14} />, action: () => copyEmail() },
     { id: 'confetti', label: 'Trigger Confetti Splash', category: 'Fun', icon: <Sparkles size={14} />, action: () => triggerConfetti() },
   ];
@@ -30,14 +42,6 @@ export default function CommandMenu({ isOpen, onClose }) {
     item.label.toLowerCase().includes(query.toLowerCase()) ||
     item.category.toLowerCase().includes(query.toLowerCase())
   );
-
-  const scrollToSection = (id) => {
-    const el = document.querySelector(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-    onClose();
-  };
 
   const copyEmail = () => {
     navigator.clipboard.writeText('rifqi_26000130@utp.edu.my');
@@ -50,7 +54,7 @@ export default function CommandMenu({ isOpen, onClose }) {
       particleCount: 100,
       spread: 70,
       origin: { y: 0.6 },
-      colors: ['#a78bfa', '#60a5fa', '#ffffff', '#f9fafb']
+      colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#ffffff']
     });
     onClose();
   };
@@ -99,7 +103,7 @@ export default function CommandMenu({ isOpen, onClose }) {
               <input
                 ref={inputRef}
                 type="text"
-                placeholder="Search commands (e.g. scroll, LinkedIn, confetti)..."
+                placeholder="Search commands (e.g. home, experience, confetti)..."
                 value={query}
                 onChange={(e) => {
                   setQuery(e.target.value);
@@ -124,19 +128,19 @@ export default function CommandMenu({ isOpen, onClose }) {
                       onMouseEnter={() => setSelectedIndex(idx)}
                       style={{
                         ...styles.item,
-                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.05)' : 'transparent',
+                        backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.08)' : 'transparent',
                       }}
                     >
                       <div style={styles.itemLeft}>
                         <div style={{
                           ...styles.itemIcon,
-                          color: isSelected ? '#ffffff' : 'var(--text-muted)'
+                          color: isSelected ? '#3b82f6' : 'var(--text-muted)'
                         }}>
                           {item.icon}
                         </div>
                         <span style={{
                           ...styles.itemLabel,
-                          color: isSelected ? '#ffffff' : 'var(--text-secondary)'
+                          color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)'
                         }}>
                           {item.label}
                         </span>
@@ -179,8 +183,8 @@ const styles = {
   modal: {
     width: '100%',
     maxWidth: '560px',
-    background: 'rgba(12, 12, 12, 0.97)',
-    border: '1px solid rgba(255, 255, 255, 0.1)',
+    background: 'var(--bg-secondary)',
+    border: '1px solid var(--border)',
     borderRadius: '14px',
     boxShadow: '0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.04)',
     overflow: 'hidden',
@@ -191,10 +195,10 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     padding: '16px 20px',
-    borderBottom: '1px solid rgba(255, 255, 255, 0.05)',
+    borderBottom: '1px solid var(--border)',
   },
   searchIcon: {
-    color: 'rgba(255,255,255,0.3)',
+    color: 'var(--text-muted)',
     marginRight: '12px',
     flexShrink: 0,
   },
@@ -203,7 +207,7 @@ const styles = {
     background: 'none',
     border: 'none',
     outline: 'none',
-    color: '#ffffff',
+    color: 'var(--text-primary)',
     fontSize: 'var(--font-size-sm)',
     fontFamily: 'var(--font-sans)',
   },
@@ -218,8 +222,8 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'center',
     '&:hover': {
-      backgroundColor: 'rgba(255,255,255,0.05)',
-      color: '#ffffff',
+      backgroundColor: 'var(--border)',
+      color: 'var(--text-primary)',
     }
   },
   list: {
@@ -252,7 +256,7 @@ const styles = {
   },
   itemCategory: {
     fontSize: 'var(--font-size-xs)',
-    color: 'rgba(255,255,255,0.25)',
+    color: 'var(--text-muted)',
     fontFamily: 'monospace',
     letterSpacing: '0.06em',
     textTransform: 'uppercase',
@@ -261,21 +265,21 @@ const styles = {
     padding: '32px 0',
     textAlign: 'center',
     fontSize: 'var(--font-size-sm)',
-    color: 'rgba(255,255,255,0.3)',
+    color: 'var(--text-muted)',
   },
   footer: {
     display: 'flex',
     alignItems: 'center',
     gap: '16px',
     padding: '12px 20px',
-    borderTop: '1px solid rgba(255, 255, 255, 0.05)',
-    background: 'rgba(255,255,255,0.02)',
+    borderTop: '1px solid var(--border)',
+    background: 'var(--bg-tertiary)',
     fontSize: 'var(--font-size-xs)',
-    color: 'rgba(255,255,255,0.3)',
+    color: 'var(--text-muted)',
   },
   kbd: {
-    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-    border: '1px solid rgba(255, 255, 255, 0.08)',
+    backgroundColor: 'var(--border)',
+    border: '1px solid var(--border-hover)',
     borderRadius: '4px',
     padding: '1px 4px',
     margin: '0 2px',
