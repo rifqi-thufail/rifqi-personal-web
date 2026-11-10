@@ -1,357 +1,161 @@
 import { useState } from 'react';
-import { ShieldCheck, Database, Cpu, QrCode, Play, RotateCcw, Check, Loader2 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, Cpu, Database, Loader2, Play, QrCode, RotateCcw, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+const STEPS = [
+  { label: 'Metadata Validation', desc: 'Analyzing license metadata for SSW Alfa integration', Icon: ShieldCheck },
+  { label: 'IPFS Storage Pinning', desc: 'Securing structural logs off-chain on decentralized storage', Icon: Database },
+  { label: 'ERC-721 Base Minting', desc: 'Deploying non-fungible certificate on Base Network L2', Icon: Cpu },
+  { label: 'QR Code Generated', desc: 'Secure verification signature compiled in under 1 hour', Icon: QrCode },
+];
+
+const MOCK_IPFS = 'QmXoypizjW3WknFixtnd47F68B6E32f9Zuf2yVpA8Yt92a';
+const MOCK_TX = '0xfa39bdc8c2273b7e77a28e83344d5c192f15598177df83ee10d0263f31fb40f4';
+const EMPTY_TX = { hash: '', ipfsHash: '', tokenId: '' };
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default function GovChainSimulator() {
-  const [status, setStatus] = useState('idle'); // 'idle', 'validating', 'ipfs', 'minting', 'verified'
+  const [status, setStatus] = useState('idle'); // 'idle' | 'running' | 'verified'
   const [currentStep, setCurrentStep] = useState(-1);
-  const [txDetails, setTxDetails] = useState({ hash: '', ipfsHash: '', tokenId: '' });
+  const [txDetails, setTxDetails] = useState(EMPTY_TX);
 
-  const steps = [
-    { id: 0, label: 'Metadata Validation', desc: 'Analyzing license metadata for SSW Alfa integration', icon: <ShieldCheck size={18} /> },
-    { id: 1, label: 'IPFS Storage Pinning', desc: 'Securing structural logs off-chain on decentralized storage', icon: <Database size={18} /> },
-    { id: 2, label: 'ERC-721 Base Minting', desc: 'Deploying non-fungible certificate on Base Network L2', icon: <Cpu size={18} /> },
-    { id: 3, label: 'QR Code Generated', desc: 'Secure verification signature compiled in under 1 hour', icon: <QrCode size={18} /> },
-  ];
+  const startSimulation = async () => {
+    setStatus('running');
 
-  const triggerConfetti = () => {
+    // Step 0: validate metadata
+    setCurrentStep(0);
+    await wait(1200);
+
+    // Step 1: upload to IPFS
+    setCurrentStep(1);
+    setTxDetails((prev) => ({ ...prev, ipfsHash: MOCK_IPFS }));
+    await wait(1400);
+
+    // Step 2: mint ERC-721
+    setCurrentStep(2);
+    const tokenId = Math.floor(Math.random() * 89999) + 10000;
+    setTxDetails((prev) => ({ ...prev, hash: MOCK_TX, tokenId: String(tokenId) }));
+    await wait(1800);
+
+    // Step 3: QR code verification
+    setCurrentStep(3);
+    setStatus('verified');
     confetti({
       particleCount: 80,
       spread: 60,
       origin: { y: 0.8 },
-      colors: ['#38bdf8', '#2dd4bf', '#ffffff'],
-      disableForReducedMotion: true
+      colors: ['#2a63f6', '#7aa2ff', '#e0213a', '#ffffff'],
+      disableForReducedMotion: true,
     });
-  };
-
-  const startSimulation = async () => {
-    setStatus('running');
-    
-    // Step 0: Validate Metadata
-    setCurrentStep(0);
-    await new Promise(resolve => setTimeout(resolve, 1200));
-
-    // Step 1: Upload to IPFS
-    setCurrentStep(1);
-    const mockIpfs = 'QmXoypizjW3WknFixtnd47F68B6E32f9Zuf2yVpA8Yt92a';
-    setTxDetails(prev => ({ ...prev, ipfsHash: mockIpfs }));
-    await new Promise(resolve => setTimeout(resolve, 1400));
-
-    // Step 2: Mint ERC-721
-    setCurrentStep(2);
-    const mockTx = '0xfa39bdc8c2273b7e77a28e83344d5c192f15598177df83ee10d0263f31fb40f4';
-    const mockTokenId = Math.floor(Math.random() * 89999) + 10000;
-    setTxDetails(prev => ({ ...prev, hash: mockTx, tokenId: mockTokenId.toString() }));
-    await new Promise(resolve => setTimeout(resolve, 1800));
-
-    // Step 3: QR Code Verification
-    setCurrentStep(3);
-    setStatus('verified');
-    triggerConfetti();
   };
 
   const resetSimulation = () => {
     setStatus('idle');
     setCurrentStep(-1);
-    setTxDetails({ hash: '', ipfsHash: '', tokenId: '' });
+    setTxDetails(EMPTY_TX);
   };
 
   return (
-    <div className="glass-card" style={styles.container}>
-      {/* Header Info */}
-      <div style={styles.header}>
+    <div className="card sim">
+      <div className="sim__header">
         <div>
-          <h3 style={styles.title}>Decentralized Permit Issuance</h3>
-          <p style={styles.subtitle}>GovChain Permit MVP • Base Network Integration</p>
+          <h4 className="sim__title">Decentralized Permit Issuance</h4>
+          <p className="sim__subtitle">GovChain Permit MVP • Base Network Integration</p>
         </div>
-        <div style={styles.actions}>
+        <div aria-live="polite">
           {status === 'idle' && (
-            <button onClick={startSimulation} style={styles.startBtn}>
-              <Play size={14} fill="currentColor" />
+            <button type="button" className="btn btn-primary btn-sm" onClick={startSimulation}>
+              <Play size={13} fill="currentColor" aria-hidden="true" />
               Issue License Permit
             </button>
           )}
+          {status === 'running' && (
+            <span className="sim__status">
+              <Loader2 size={14} className="spin" aria-hidden="true" />
+              Minting Node Active...
+            </span>
+          )}
           {status === 'verified' && (
-            <button onClick={resetSimulation} style={styles.resetBtn}>
-              <RotateCcw size={14} />
+            <button type="button" className="btn btn-secondary btn-sm" onClick={resetSimulation}>
+              <RotateCcw size={14} aria-hidden="true" />
               Reset Flow
             </button>
-          )}
-          {status === 'running' && (
-            <div style={styles.runningBadge}>
-              <Loader2 size={14} className="spin-loader" />
-              Minting Node Active...
-            </div>
           )}
         </div>
       </div>
 
-      {/* Simulator Visual Pipeline */}
-      <div style={styles.pipeline}>
-        {steps.map((step, idx) => {
-          const isCompleted = currentStep > idx || status === 'verified';
+      <ol>
+        {STEPS.map(({ label, desc, Icon }, idx) => {
+          const isDone = currentStep > idx || status === 'verified';
           const isActive = currentStep === idx && status !== 'verified';
-          
+
           return (
-            <div key={step.id} style={styles.stepRow}>
-              {/* Progress Node */}
-              <div style={styles.nodeColumn}>
-                <div style={{
-                  ...styles.nodeCircle,
-                  borderColor: isCompleted ? 'var(--accent-teal)' : isActive ? 'var(--accent-cyan)' : 'var(--border-color)',
-                  backgroundColor: isCompleted ? 'rgba(45, 212, 191, 0.1)' : isActive ? 'rgba(56, 189, 248, 0.1)' : 'transparent',
-                  color: isCompleted ? 'var(--accent-teal)' : isActive ? 'var(--accent-cyan)' : 'var(--text-muted)',
-                }}>
-                  {isCompleted ? <Check size={14} strokeWidth={3} /> : step.icon}
-                </div>
-                {idx < steps.length - 1 && (
-                  <div style={{
-                    ...styles.nodeLine,
-                    backgroundColor: isCompleted ? 'var(--accent-teal)' : 'var(--border-color)',
-                  }} />
-                )}
+            <li key={label} className={`sim__step${isDone ? ' is-done' : isActive ? ' is-active' : ''}`}>
+              <div className="sim__rail" aria-hidden="true">
+                <div className="sim__node">{isDone ? <Check size={15} strokeWidth={3} /> : <Icon size={16} />}</div>
+                {idx < STEPS.length - 1 && <div className="sim__line" />}
               </div>
 
-              {/* Progress Details */}
-              <div style={styles.detailsColumn}>
-                <span style={{
-                  ...styles.stepLabel,
-                  color: isCompleted ? 'var(--text-primary)' : isActive ? 'var(--accent-cyan)' : 'var(--text-secondary)'
-                }}>
-                  {step.label}
-                </span>
-                <p style={styles.stepDesc}>{step.desc}</p>
-                
-                {/* Embedded simulation outputs */}
+              <div className="sim__body">
+                <p className="sim__label">{label}</p>
+                <p className="sim__desc">{desc}</p>
+
                 <AnimatePresence>
                   {isActive && idx === 0 && (
-                    <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }} exit={{ opacity: 0, height: 0 }} style={styles.logOutput}>
+                    <motion.div
+                      className="sim__log"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                    >
                       <code>[INFO] Connection verified with SSW Alfa API... OK</code>
                     </motion.div>
                   )}
-                  {isCompleted && idx === 1 && txDetails.ipfsHash && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={styles.logOutput}>
-                      <code>CID: <span style={{ color: 'var(--accent-zinc)' }}>{txDetails.ipfsHash.slice(0, 16)}...</span></code>
+                  {isDone && idx === 1 && txDetails.ipfsHash && (
+                    <motion.div className="sim__log" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <code>
+                        CID: <span>{txDetails.ipfsHash.slice(0, 16)}...</span>
+                      </code>
                     </motion.div>
                   )}
-                  {isCompleted && idx === 2 && txDetails.hash && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} style={styles.logOutput}>
-                      <code>Tx: <span style={{ color: 'var(--accent-cyan)' }}>{txDetails.hash.slice(0, 16)}...</span></code>
-                      <br />
-                      <code>Token ID: <span style={{ color: '#818cf8' }}>{txDetails.tokenId}</span></code>
+                  {isDone && idx === 2 && txDetails.hash && (
+                    <motion.div className="sim__log" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <code>
+                        Tx: <span>{txDetails.hash.slice(0, 16)}...</span>
+                      </code>
+                      <code>
+                        Token ID: <span>{txDetails.tokenId}</span>
+                      </code>
                     </motion.div>
                   )}
                 </AnimatePresence>
               </div>
-            </div>
+            </li>
           );
         })}
-      </div>
+      </ol>
 
-      {/* Verified Banner */}
       <AnimatePresence>
         {status === 'verified' && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
+            className="sim__verified"
+            role="status"
+            initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            style={styles.verifiedBanner}
+            exit={{ opacity: 0, scale: 0.97 }}
           >
-            <div style={styles.verifiedLeft}>
-              <div style={styles.successDot} />
-              <div>
-                <span style={styles.verifiedTitle}>Verification Speeds Improved by 95%</span>
-                <p style={styles.verifiedDesc}>Permits are fully auditable & cryptographically secure in real-time.</p>
-              </div>
+            <div>
+              <strong>Verification Speeds Improved by 95%</strong>
+              <p>Permits are fully auditable &amp; cryptographically secure in real-time.</p>
             </div>
-            <div style={styles.qrCodeWrapper}>
-              <QrCode size={40} style={{ color: 'var(--text-primary)' }} />
+            <div className="sim__qr" aria-hidden="true">
+              <QrCode size={40} />
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      <style>{`
-        @keyframes spin {
-          to { transform: rotate(360deg); }
-        }
-        .spin-loader {
-          animation: spin 1s linear infinite;
-        }
-      `}</style>
     </div>
   );
 }
-
-const styles = {
-  container: {
-    padding: '24px',
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '24px',
-  },
-  header: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '16px',
-    borderBottom: '1px solid var(--border-color)',
-    paddingBottom: '20px',
-  },
-  title: {
-    fontSize: 'var(--font-size-md)',
-    fontWeight: 600,
-    color: 'var(--text-primary)',
-  },
-  subtitle: {
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-secondary)',
-  },
-  actions: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  startBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    backgroundColor: 'var(--btn-primary-bg)',
-    color: 'var(--btn-primary-text)',
-    border: '1px solid var(--border-hover)',
-    borderRadius: '6px',
-    padding: '6px 14px',
-    fontSize: 'var(--font-size-xs)',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'var(--transition-smooth)',
-    boxShadow: 'var(--btn-primary-shadow)',
-  },
-  resetBtn: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    backgroundColor: 'var(--glass-bg-hover)',
-    color: 'var(--text-secondary)',
-    border: '1px solid var(--border-color)',
-    borderRadius: '6px',
-    padding: '6px 14px',
-    fontSize: 'var(--font-size-xs)',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'var(--transition-snappy)',
-  },
-  runningBadge: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    backgroundColor: 'rgba(56, 189, 248, 0.1)',
-    color: 'var(--accent-cyan)',
-    border: '1px solid rgba(56, 189, 248, 0.2)',
-    borderRadius: '6px',
-    padding: '6px 14px',
-    fontSize: 'var(--font-size-xs)',
-    fontWeight: 500,
-  },
-  pipeline: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  stepRow: {
-    display: 'flex',
-    gap: '16px',
-  },
-  nodeColumn: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '32px',
-  },
-  nodeCircle: {
-    width: '32px',
-    height: '32px',
-    borderRadius: '50%',
-    border: '1px solid var(--border-color)',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-  },
-  nodeLine: {
-    width: '1px',
-    flexGrow: 1,
-    minHeight: '28px',
-    transition: 'background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-  },
-  detailsColumn: {
-    flex: 1,
-    paddingTop: '4px',
-    paddingBottom: '20px',
-  },
-  stepLabel: {
-    fontSize: 'var(--font-size-sm)',
-    fontWeight: 600,
-    transition: 'color 0.4s ease',
-  },
-  stepDesc: {
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-secondary)',
-    marginTop: '2px',
-  },
-  logOutput: {
-    backgroundColor: 'var(--bg-tertiary)',
-    border: '1px solid var(--border)',
-    borderRadius: '6px',
-    padding: '8px 12px',
-    marginTop: '10px',
-    fontFamily: 'var(--font-mono)',
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-secondary)',
-    overflowX: 'auto',
-  },
-  verifiedBanner: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    background: 'linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(16, 185, 129, 0.06))',
-    border: '1px solid rgba(16, 185, 129, 0.25)',
-    borderRadius: '12px',
-    padding: '16px 20px',
-    color: 'var(--text-primary)',
-    boxShadow: '0 10px 30px rgba(16, 185, 129, 0.08)',
-  },
-  verifiedLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-  },
-  successDot: {
-    width: '8px',
-    height: '8px',
-    borderRadius: '50%',
-    backgroundColor: '#10b981',
-    animation: 'pulse-slow 1.5s infinite alternate',
-  },
-  verifiedTitle: {
-    fontSize: 'var(--font-size-sm)',
-    fontWeight: 700,
-    display: 'block',
-    color: '#10b981',
-  },
-  verifiedDesc: {
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-secondary)',
-  },
-  qrCodeWrapper: {
-    padding: '6px',
-    backgroundColor: 'var(--bg-tertiary)',
-    border: '1px solid var(--border)',
-    borderRadius: '6px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'var(--text-primary)',
-  },
-};

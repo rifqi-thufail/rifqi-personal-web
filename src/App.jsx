@@ -1,207 +1,211 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useCallback, useEffect, useState } from 'react';
+import { AnimatePresence, MotionConfig, motion } from 'framer-motion';
 import { ArrowUp } from 'lucide-react';
 
 import Header from './components/Header';
-import PlanetGlow from './components/PlanetGlow';
+import Footer from './components/Footer';
 import CommandMenu from './components/CommandMenu';
 
-// Pages
 import HomePage from './pages/HomePage';
 import ExperiencePage from './pages/ExperiencePage';
 import PortfolioPage from './pages/PortfolioPage';
 import SkillsPage from './pages/SkillsPage';
 
+import { initPointerFx } from './utils/pointerFx';
+
+const PAGES = ['home', 'experience', 'portfolio', 'skills'];
+
+// Hash routes: '' (home), #experience, #portfolio, #portfolio/<id>, #skills, #contact
+function parseHash() {
+  const raw = window.location.hash.replace(/^#\/?/, '');
+  const [page, ...rest] = raw.split('/');
+  if (page === 'portfolio') {
+    return { page, projectId: rest.join('/') || null, contact: false };
+  }
+  if (PAGES.includes(page)) return { page, projectId: null, contact: false };
+  return { page: 'home', projectId: null, contact: page === 'contact' };
+}
+
+function getInitialTheme() {
+  try {
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark' || stored === 'light') return stored;
+  } catch {
+    // Storage unavailable (private mode etc.) — fall back to the default.
+  }
+  return 'dark';
+}
+
+function prefersReducedMotion() {
+  return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+}
+
+// The home page may still be mounting (page transition), so retry briefly.
+function scrollToContact() {
+  let tries = 0;
+  const tick = () => {
+    const el = document.getElementById('contact');
+    if (el) {
+      el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
+    } else if (tries++ < 40) {
+      setTimeout(tick, 50);
+    }
+  };
+  tick();
+}
+
 export default function App() {
-  const [activePage, setActivePage] = useState('home');
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('theme') || 'dark';
-  });
+  const [route, setRoute] = useState(parseHash);
+  const [theme, setTheme] = useState(getInitialTheme);
   const [cmdOpen, setCmdOpen] = useState(false);
   const [showTop, setShowTop] = useState(false);
 
-  useEffect(() => {
-    // Synchronize page based on window hash for direct sharing / back buttons
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash.startsWith('#portfolio/')) {
-        setActivePage('portfolio');
-      } else if (hash === '#experience') {
-        setActivePage('experience');
-      } else if (hash === '#portfolio') {
-        setActivePage('portfolio');
-      } else if (hash === '#skills') {
-        setActivePage('skills');
-      } else {
-        setActivePage('home');
-      }
-    };
+  const { page, projectId } = route;
 
-    window.addEventListener('hashchange', handleHashChange);
-    handleHashChange(); // Run on mount
-    return () => window.removeEventListener('hashchange', handleHashChange);
+  // Keep the route in sync with the URL hash (deep links, back/forward).
+  useEffect(() => {
+    const onHashChange = () => {
+      const next = parseHash();
+      setRoute(next);
+      if (next.contact) scrollToContact();
+    };
+    window.addEventListener('hashchange', onHashChange);
+    if (parseHash().contact) scrollToContact();
+    return () => window.removeEventListener('hashchange', onHashChange);
   }, []);
 
+  // Start every page at the top.
   useEffect(() => {
-    // Apply theme attribute to document element for global CSS styling
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [page, projectId]);
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
+    try {
+      localStorage.setItem('theme', theme);
+    } catch {
+      // Ignore storage failures; the theme still applies for this session.
+    }
   }, [theme]);
 
+  // Card spotlight / tilt and backdrop parallax.
+  useEffect(() => initPointerFx(), []);
+
   useEffect(() => {
-    const handleScroll = () => setShowTop(window.scrollY > 500);
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    const onScroll = () => setShowTop(window.scrollY > 500);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+    const onKeyDown = (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
         e.preventDefault();
-        setCmdOpen(v => !v);
+        setCmdOpen((v) => !v);
       }
     };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const toggleTheme = () => {
-    // Add transition class so all elements animate color changes
-    document.documentElement.classList.add('theme-transitioning');
-    setTheme(prev => (prev === 'dark' ? 'light' : 'dark'));
-    // Remove class after transition completes (matches CSS 0.4s duration)
-    setTimeout(() => {
-      document.documentElement.classList.remove('theme-transitioning');
-    }, 500);
-  };
+  const toggleTheme = useCallback(() => {
+    const root = document.documentElement;
+    root.classList.add('theme-transitioning');
+    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTimeout(() => root.classList.remove('theme-transitioning'), 350);
+  }, []);
 
-  const handleNavigate = (page) => {
-    setActivePage(page);
-    window.location.hash = page === 'home' ? '' : page;
-  };
-
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'experience':
-        return <ExperiencePage />;
-      case 'portfolio':
-        return <PortfolioPage />;
-      case 'skills':
-        return <SkillsPage />;
-      case 'home':
-      default:
-        return <HomePage onNavigate={handleNavigate} />;
+  const navigate = useCallback((target) => {
+    const hash = target === 'home' ? '' : `#${target}`;
+    if (window.location.hash === hash || (hash === '' && window.location.hash === '#')) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+      return;
     }
-  };
+    window.location.hash = hash;
+  }, []);
+
+  const goToContact = useCallback(() => {
+    if (parseHash().page !== 'home') window.location.hash = '';
+    scrollToContact();
+  }, []);
+
+  const closeCmd = useCallback(() => setCmdOpen(false), []);
+
+  let content;
+  switch (page) {
+    case 'experience':
+      content = <ExperiencePage />;
+      break;
+    case 'portfolio':
+      content = <PortfolioPage projectId={projectId} />;
+      break;
+    case 'skills':
+      content = <SkillsPage />;
+      break;
+    default:
+      content = <HomePage onContact={goToContact} />;
+  }
 
   return (
-    <div style={{ position: 'relative', overflowX: 'hidden', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <MotionConfig reducedMotion="user">
+      <div className="app">
+        <a className="skip-link" href="#main" onClick={(e) => {
+          e.preventDefault();
+          document.getElementById('main')?.focus();
+        }}>
+          Skip to content
+        </a>
 
-      {/* Global Background space visuals */}
-      <PlanetGlow activePage={activePage} theme={theme} />
+        <Header
+          activePage={page}
+          theme={theme}
+          onToggleTheme={toggleTheme}
+          onOpenCommandMenu={() => setCmdOpen(true)}
+          onContact={goToContact}
+        />
 
-      {/* Header Navigation */}
-      <Header
-        activePage={activePage}
-        onNavigate={handleNavigate}
-        theme={theme}
-        onToggleTheme={toggleTheme}
-        onOpenCommandMenu={() => setCmdOpen(true)}
-      />
+        <CommandMenu
+          isOpen={cmdOpen}
+          onClose={closeCmd}
+          onNavigate={navigate}
+          onContact={goToContact}
+          onToggleTheme={toggleTheme}
+          theme={theme}
+        />
 
-      {/* Command Explorer Menu */}
-      <CommandMenu
-        isOpen={cmdOpen}
-        onClose={() => setCmdOpen(false)}
-        onNavigate={handleNavigate}
-      />
+        <main id="main" className="app__main" tabIndex={-1}>
+          <AnimatePresence mode="wait" initial={false}>
+            <motion.div
+              key={`${page}/${projectId ?? ''}`}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+            >
+              {content}
+            </motion.div>
+          </AnimatePresence>
+        </main>
 
-      {/* Main Content Area with Page Transitions */}
-      <main style={{ flex: 1, zIndex: 10, position: 'relative' }}>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activePage}
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            style={{ width: '100%' }}
-          >
-            {renderActivePage()}
-          </motion.div>
+        <Footer onContact={goToContact} />
+
+        <AnimatePresence>
+          {showTop && (
+            <motion.button
+              type="button"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: prefersReducedMotion() ? 'auto' : 'smooth' })}
+              className="back-to-top"
+              aria-label="Back to top"
+            >
+              <ArrowUp size={16} aria-hidden="true" />
+            </motion.button>
+          )}
         </AnimatePresence>
-      </main>
-
-      {/* Footer */}
-      <footer style={styles.footer}>
-        <div style={styles.footerInner}>
-          <span style={styles.footerText}>© {new Date().getFullYear()} Rifqi Aufa Thufail</span>
-          <span style={styles.footerRight}>Built with React & Framer Motion</span>
-        </div>
-      </footer>
-
-      {/* Back to Top */}
-      <AnimatePresence>
-        {showTop && (
-          <motion.button
-            initial={{ opacity: 0, y: 12, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12, scale: 0.9 }}
-            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            style={styles.bttBtn}
-            className="back-to-top-btn"
-            aria-label="Back to top"
-          >
-            <ArrowUp size={13} />
-            <span>Top</span>
-          </motion.button>
-        )}
-      </AnimatePresence>
-
-    </div>
+      </div>
+    </MotionConfig>
   );
 }
-
-const styles = {
-  footer: {
-    borderTop: '1px solid var(--border)',
-    padding: '28px 24px',
-    position: 'relative',
-    zIndex: 10,
-    background: 'var(--glass-bg)',
-  },
-  footerInner: {
-    maxWidth: '1100px',
-    margin: '0 auto',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    gap: '8px',
-  },
-  footerText: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' },
-  footerRight: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', fontFamily: 'monospace' },
-
-  bttBtn: {
-    position: 'fixed',
-    bottom: '28px',
-    right: '28px',
-    zIndex: 1000,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '6px',
-    background: 'var(--bg-secondary)',
-    backdropFilter: 'blur(16px)',
-    WebkitBackdropFilter: 'blur(16px)',
-    border: '1px solid var(--border)',
-    color: 'var(--text-secondary)',
-    padding: '9px 16px',
-    borderRadius: '100px',
-    fontSize: 'var(--font-size-xs)',
-    fontWeight: 500,
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    boxShadow: '0 8px 24px -6px rgba(0,0,0,0.5)',
-  },
-};

@@ -1,3 +1,4 @@
+import PageHeader from '../components/PageHeader';
 
 const CATEGORIES = [
   {
@@ -43,77 +44,32 @@ const CATEGORIES = [
 ];
 
 export default function SkillsPage() {
-  const glow = (e) => {
-    const el = e.currentTarget;
-    const r = el.getBoundingClientRect();
-    el.style.setProperty('--mouse-x', `${e.clientX - r.left}px`);
-    el.style.setProperty('--mouse-y', `${e.clientY - r.top}px`);
-  };
-
   return (
-    <section className="section-container" style={{ paddingTop: '112px' }}>
-      {/* Header */}
-      <div style={st.header}>
-        <span className="label-mono">Skillsets</span>
-        <h1 style={st.heading}>Technical Stack & Certifications</h1>
-        <p style={st.sub}>
-          Validated academic knowledge, enterprise tooling expertise, and multi-cultural communication skills.
-        </p>
-      </div>
+    <>
+      <PageHeader eyebrow="Skillsets" title="Technical Stack & Certifications">
+        Validated academic knowledge, enterprise tooling expertise, and multi-cultural communication skills.
+      </PageHeader>
 
-      {/* Grid */}
-      <div style={st.grid}>
-        {CATEGORIES.map((cat) => (
-          <div key={cat.title} className="glass-card skill-card" style={st.card} onMouseMove={glow}>
-            <div className="skill-card-head" style={st.cardHead}>
-              <h3 className="skill-card-title" style={st.cardTitle}>{cat.title}</h3>
-              <span className="skill-card-sub" style={st.cardSub}>{cat.sub}</span>
-            </div>
-            <div className="skill-items" style={st.items}>
-              {cat.items.map((item) => (
-                <div key={item.name} className="skill-item" style={st.item}>
-                  <div className="skill-item-dot" style={st.itemDot} />
-                  <div>
-                    <span className="skill-item-name" style={st.itemName}>{item.name}</span>
-                    <span className="skill-item-detail" style={st.itemDetail}>{item.detail}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        ))}
-      </div>
-    </section>
+      <section className="section">
+        <div className="container grid grid--2">
+          {CATEGORIES.map((cat) => (
+            <article key={cat.title} className="card">
+              <div className="skill-card__head">
+                <h2 className="card__title">{cat.title}</h2>
+                <p className="mono-label">{cat.sub}</p>
+              </div>
+              <ul className="skill-list">
+                {cat.items.map((item) => (
+                  <li key={item.name}>
+                    <span className="skill__name">{item.name}</span>
+                    <span className="skill__detail">{item.detail}</span>
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))}
+        </div>
+      </section>
+    </>
   );
 }
-
-const st = {
-  header: { textAlign: 'center', marginBottom: '56px' },
-  heading: {
-    fontSize: 'var(--font-size-3xl)',
-    fontWeight: 800,
-    color: 'var(--text-primary)',
-    letterSpacing: '-0.04em',
-    marginBottom: '8px',
-  },
-  sub: {
-    fontSize: 'var(--font-size-base)',
-    color: 'var(--text-secondary)',
-    maxWidth: '540px',
-    margin: '0 auto',
-    lineHeight: 1.6
-  },
-  grid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' },
-  card: { padding: '24px', display: 'flex', flexDirection: 'column', gap: '20px' },
-  cardHead: { borderBottom: '1px solid var(--border)', paddingBottom: '14px' },
-  cardTitle: { fontSize: 'var(--font-size-md)', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '3px' },
-  cardSub: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)' },
-  items: { display: 'flex', flexDirection: 'column', gap: '14px' },
-  item: { display: 'flex', gap: '12px', alignItems: 'flex-start' },
-  itemDot: {
-    width: '5px', height: '5px', borderRadius: '50%',
-    background: 'rgba(59, 130, 246, 0.5)', marginTop: '8px', flexShrink: 0,
-  },
-  itemName: { fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--text-secondary)', display: 'block' },
-  itemDetail: { fontSize: 'var(--font-size-xs)', color: 'var(--text-muted)', display: 'block', marginTop: '1px' },
-};

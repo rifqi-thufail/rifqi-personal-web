@@ -1,289 +1,227 @@
-import { useState, useEffect, useRef } from 'react';
-import { Search, Hash, Globe, Mail, Sparkles, X } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, Check, ExternalLink, Mail, Moon, Search, Sparkles, Sun, X } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { CONTACT } from '../data/site';
+import { copyToClipboard } from '../utils/clipboard';
 
-export default function CommandMenu({ isOpen, onClose, onNavigate }) {
+function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [copyState, setCopyState] = useState('idle'); // 'idle' | 'copied' | 'failed'
   const inputRef = useRef(null);
+  const closeRef = useRef(null);
+  const listRef = useRef(null);
 
-  // Focus input automatically on open
+  // Focus the input on open; restore focus to the trigger on close.
   useEffect(() => {
-    if (isOpen) {
-      inputRef.current?.focus();
-    }
-  }, [isOpen]);
-
-  const items = [
-    { id: 'home', label: 'Go to: Home Page', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('home'); onClose(); } },
-    { id: 'experience', label: 'Go to: Experience & Education', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('experience'); onClose(); } },
-    { id: 'portfolio', label: 'Go to: Portfolios & Projects', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('portfolio'); onClose(); } },
-    { id: 'skills', label: 'Go to: Skills & Certifications', category: 'Navigation', icon: <Hash size={14} />, action: () => { onNavigate('skills'); onClose(); } },
-    {
-      id: 'contact',
-      label: 'Scroll to: Contact Info (Home)',
-      category: 'Navigation',
-      icon: <Hash size={14} />,
-      action: () => {
-        onNavigate('home');
-        onClose();
-        setTimeout(() => {
-          document.getElementById('contact-direct')?.scrollIntoView({ behavior: 'smooth' });
-        }, 150);
-      }
-    },
-    { id: 'linkedin', label: 'Open: LinkedIn Profile', category: 'External Links', icon: <Globe size={14} />, action: () => { window.open('https://linkedin.com/in/rifqiaufathufail/', '_blank'); onClose(); } },
-    { id: 'email', label: 'Copy Email to Clipboard', category: 'Contact', icon: <Mail size={14} />, action: () => copyEmail() },
-    { id: 'confetti', label: 'Trigger Confetti Splash', category: 'Fun', icon: <Sparkles size={14} />, action: () => triggerConfetti() },
-  ];
-
-  const filteredItems = items.filter(item =>
-    item.label.toLowerCase().includes(query.toLowerCase()) ||
-    item.category.toLowerCase().includes(query.toLowerCase())
-  );
-
-  const copyEmail = () => {
-    navigator.clipboard.writeText('rifqi_26000130@utp.edu.my');
-    alert('Email copied to clipboard!');
-    onClose();
-  };
-
-  const triggerConfetti = () => {
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#3b82f6', '#60a5fa', '#93c5fd', '#ffffff']
-    });
-    onClose();
-  };
-
-  // Keyboard navigation
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (!isOpen) return;
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setSelectedIndex(prev => (prev + 1) % filteredItems.length);
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelectedIndex(prev => (prev - 1 + filteredItems.length) % filteredItems.length);
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        if (filteredItems[selectedIndex]) {
-          filteredItems[selectedIndex].action();
-        }
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose();
-      }
+    const previous = document.activeElement;
+    inputRef.current?.focus();
+    const { overflow } = document.body.style;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = overflow;
+      if (previous instanceof HTMLElement) previous.focus({ preventScroll: true });
     };
+  }, []);
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, selectedIndex, filteredItems, onClose]);
+  // Give the "copied" confirmation a moment on screen, then close.
+  useEffect(() => {
+    if (copyState !== 'copied') return undefined;
+    const timer = setTimeout(onClose, 1100);
+    return () => clearTimeout(timer);
+  }, [copyState, onClose]);
+
+  const items = useMemo(() => {
+    const go = (page) => () => {
+      onNavigate(page);
+      onClose();
+    };
+    return [
+      { id: 'home', label: 'Go to Home', category: 'Navigation', icon: <ArrowRight size={15} />, action: go('home') },
+      { id: 'experience', label: 'Go to Experience & Education', category: 'Navigation', icon: <ArrowRight size={15} />, action: go('experience') },
+      { id: 'portfolio', label: 'Go to Portfolio & Projects', category: 'Navigation', icon: <ArrowRight size={15} />, action: go('portfolio') },
+      { id: 'skills', label: 'Go to Skills & Certifications', category: 'Navigation', icon: <ArrowRight size={15} />, action: go('skills') },
+      {
+        id: 'contact',
+        label: 'Go to Contact Info',
+        category: 'Navigation',
+        icon: <ArrowRight size={15} />,
+        action: () => {
+          onClose();
+          onContact();
+        },
+      },
+      {
+        id: 'linkedin',
+        label: 'Open LinkedIn Profile',
+        category: 'Links',
+        icon: <ExternalLink size={15} />,
+        action: () => {
+          window.open(CONTACT.linkedinUrl, '_blank', 'noopener,noreferrer');
+          onClose();
+        },
+      },
+      {
+        id: 'email',
+        label:
+          copyState === 'copied' ? 'Email copied to clipboard'
+          : copyState === 'failed' ? `Copy failed — ${CONTACT.email}`
+          : 'Copy Email to Clipboard',
+        category: 'Contact',
+        icon: copyState === 'copied' ? <Check size={15} /> : <Mail size={15} />,
+        success: copyState === 'copied',
+        action: async () => {
+          const ok = await copyToClipboard(CONTACT.email);
+          setCopyState(ok ? 'copied' : 'failed');
+        },
+      },
+      {
+        id: 'theme',
+        label: theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme',
+        category: 'Preferences',
+        icon: theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />,
+        action: () => {
+          onToggleTheme();
+          onClose();
+        },
+      },
+      {
+        id: 'confetti',
+        label: 'Trigger Confetti',
+        category: 'Fun',
+        icon: <Sparkles size={15} />,
+        action: () => {
+          confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#2a63f6', '#7aa2ff', '#e0213a', '#ffffff'],
+            disableForReducedMotion: true,
+          });
+          onClose();
+        },
+      },
+    ];
+  }, [copyState, onClose, onContact, onNavigate, onToggleTheme, theme]);
+
+  const q = query.trim().toLowerCase();
+  const filtered = items.filter(
+    (item) => item.label.toLowerCase().includes(q) || item.category.toLowerCase().includes(q),
+  );
+  const active = filtered.length ? Math.min(selectedIndex, filtered.length - 1) : -1;
+
+  useEffect(() => {
+    listRef.current?.querySelector('[aria-selected="true"]')?.scrollIntoView({ block: 'nearest' });
+  }, [active]);
+
+  const onKeyDown = (e) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      if (filtered.length) setSelectedIndex((active + 1) % filtered.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (filtered.length) setSelectedIndex((active - 1 + filtered.length) % filtered.length);
+    } else if (e.key === 'Enter') {
+      if (document.activeElement === closeRef.current) return;
+      e.preventDefault();
+      filtered[active]?.action();
+    } else if (e.key === 'Escape') {
+      e.preventDefault();
+      onClose();
+    } else if (e.key === 'Tab') {
+      // Keep focus inside the dialog: it only has the input and the close button.
+      e.preventDefault();
+      (document.activeElement === inputRef.current ? closeRef.current : inputRef.current)?.focus();
+    }
+  };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <div style={styles.overlay} onClick={onClose}>
-          <motion.div
-            initial={{ opacity: 0, scale: 0.97, y: -10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.97, y: -10 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
-            style={styles.modal}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Input bar */}
-            <div style={styles.searchBar}>
-              <Search size={16} style={styles.searchIcon} />
-              <input
-                ref={inputRef}
-                type="text"
-                placeholder="Search commands (e.g. home, experience, confetti)..."
-                value={query}
-                onChange={(e) => {
-                  setQuery(e.target.value);
-                  setSelectedIndex(0);
-                }}
-                style={styles.searchInput}
-              />
-              <button onClick={onClose} style={styles.closeBtn}>
-                <X size={14} />
-              </button>
-            </div>
-
-            {/* Command List */}
-            <div style={styles.list}>
-              {filteredItems.length > 0 ? (
-                filteredItems.map((item, idx) => {
-                  const isSelected = idx === selectedIndex;
-                  return (
-                    <div
-                      key={item.id}
-                      onClick={item.action}
-                      onMouseEnter={() => setSelectedIndex(idx)}
-                      style={{
-                        ...styles.item,
-                        backgroundColor: isSelected ? 'rgba(59, 130, 246, 0.08)' : 'transparent',
-                      }}
-                    >
-                      <div style={styles.itemLeft}>
-                        <div style={{
-                          ...styles.itemIcon,
-                          color: isSelected ? '#3b82f6' : 'var(--text-muted)'
-                        }}>
-                          {item.icon}
-                        </div>
-                        <span style={{
-                          ...styles.itemLabel,
-                          color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)'
-                        }}>
-                          {item.label}
-                        </span>
-                      </div>
-                      <span style={styles.itemCategory}>{item.category}</span>
-                    </div>
-                  );
-                })
-              ) : (
-                <div style={styles.emptyState}>No commands matching "{query}" found.</div>
-              )}
-            </div>
-
-            {/* Navigation Tips Footer */}
-            <div style={styles.footer}>
-              <span>Use <kbd style={styles.kbd}>↑↓</kbd> to navigate</span>
-              <span><kbd style={styles.kbd}>Enter</kbd> to select</span>
-              <span><kbd style={styles.kbd}>Esc</kbd> to close</span>
-            </div>
-          </motion.div>
+    <motion.div
+      className="cmd-overlay"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.15 }}
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
+    >
+      <motion.div
+        className="cmd"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Command menu"
+        initial={{ opacity: 0, scale: 0.98, y: -8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.98, y: -8 }}
+        transition={{ duration: 0.16, ease: 'easeOut' }}
+        onKeyDown={onKeyDown}
+      >
+        <div className="cmd__search">
+          <Search size={17} aria-hidden="true" />
+          <input
+            ref={inputRef}
+            type="text"
+            role="combobox"
+            aria-expanded="true"
+            aria-controls="cmd-list"
+            aria-activedescendant={active >= 0 ? `cmd-item-${filtered[active].id}` : undefined}
+            aria-label="Search commands"
+            placeholder="Search pages and actions…"
+            autoComplete="off"
+            spellCheck="false"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSelectedIndex(0);
+            }}
+          />
+          <button ref={closeRef} type="button" className="icon-btn icon-btn--sm" onClick={onClose} aria-label="Close command menu">
+            <X size={15} aria-hidden="true" />
+          </button>
         </div>
-      )}
-    </AnimatePresence>
+
+        <div className="cmd__list" id="cmd-list" role="listbox" aria-label="Commands" ref={listRef}>
+          {filtered.length > 0 ? (
+            filtered.map((item, idx) => (
+              <div
+                key={item.id}
+                id={`cmd-item-${item.id}`}
+                role="option"
+                aria-selected={idx === active}
+                className={`cmd__item${item.success ? ' is-success' : ''}`}
+                onClick={item.action}
+                onMouseMove={() => setSelectedIndex(idx)}
+              >
+                <span className="cmd__item-icon" aria-hidden="true">{item.icon}</span>
+                <span className="cmd__item-label">{item.label}</span>
+                <span className="cmd__item-category">{item.category}</span>
+              </div>
+            ))
+          ) : (
+            <div className="cmd__empty">No commands matching &ldquo;{query}&rdquo;.</div>
+          )}
+        </div>
+
+        <div className="cmd__footer" aria-hidden="true">
+          <span><kbd>↑</kbd><kbd>↓</kbd> Navigate</span>
+          <span><kbd>↵</kbd> Select</span>
+          <span><kbd>Esc</kbd> Close</span>
+        </div>
+
+        <span className="sr-only" role="status">
+          {copyState === 'copied' ? 'Email copied to clipboard' : copyState === 'failed' ? 'Copy failed' : ''}
+        </span>
+      </motion.div>
+    </motion.div>
   );
 }
 
-const styles = {
-  overlay: {
-    position: 'fixed',
-    inset: 0,
-    backgroundColor: 'rgba(3, 7, 18, 0.7)',
-    backdropFilter: 'blur(8px)',
-    WebkitBackdropFilter: 'blur(8px)',
-    zIndex: 9999,
-    display: 'flex',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
-    paddingTop: '15vh',
-  },
-  modal: {
-    width: '100%',
-    maxWidth: '560px',
-    background: 'var(--bg-secondary)',
-    border: '1px solid var(--border)',
-    borderRadius: '14px',
-    boxShadow: '0 40px 80px -20px rgba(0, 0, 0, 0.9), 0 0 0 1px rgba(255,255,255,0.04)',
-    overflow: 'hidden',
-    backdropFilter: 'blur(24px)',
-    WebkitBackdropFilter: 'blur(24px)',
-  },
-  searchBar: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: '16px 20px',
-    borderBottom: '1px solid var(--border)',
-  },
-  searchIcon: {
-    color: 'var(--text-muted)',
-    marginRight: '12px',
-    flexShrink: 0,
-  },
-  searchInput: {
-    flex: 1,
-    background: 'none',
-    border: 'none',
-    outline: 'none',
-    color: 'var(--text-primary)',
-    fontSize: 'var(--font-size-sm)',
-    fontFamily: 'var(--font-sans)',
-  },
-  closeBtn: {
-    background: 'none',
-    border: 'none',
-    color: 'var(--text-muted)',
-    cursor: 'pointer',
-    padding: '4px',
-    borderRadius: '4px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    '&:hover': {
-      backgroundColor: 'var(--border)',
-      color: 'var(--text-primary)',
-    }
-  },
-  list: {
-    maxHeight: '280px',
-    overflowY: 'auto',
-    padding: '8px',
-  },
-  item: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    padding: '10px 14px',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'background-color 0.15s ease',
-  },
-  itemLeft: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-  },
-  itemIcon: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  itemLabel: {
-    fontSize: 'var(--font-size-sm)',
-    fontWeight: 500,
-  },
-  itemCategory: {
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-muted)',
-    fontFamily: 'monospace',
-    letterSpacing: '0.06em',
-    textTransform: 'uppercase',
-  },
-  emptyState: {
-    padding: '32px 0',
-    textAlign: 'center',
-    fontSize: 'var(--font-size-sm)',
-    color: 'var(--text-muted)',
-  },
-  footer: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '16px',
-    padding: '12px 20px',
-    borderTop: '1px solid var(--border)',
-    background: 'var(--bg-tertiary)',
-    fontSize: 'var(--font-size-xs)',
-    color: 'var(--text-muted)',
-  },
-  kbd: {
-    backgroundColor: 'var(--border)',
-    border: '1px solid var(--border-hover)',
-    borderRadius: '4px',
-    padding: '1px 4px',
-    margin: '0 2px',
-    fontFamily: 'var(--font-mono)',
-    fontSize: 'var(--font-size-xs)',
-  },
-};
+export default function CommandMenu({ isOpen, ...props }) {
+  return (
+    <AnimatePresence>
+      {isOpen && <Palette key="palette" {...props} />}
+    </AnimatePresence>
+  );
+}
