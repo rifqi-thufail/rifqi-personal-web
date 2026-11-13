@@ -137,6 +137,8 @@
     --gutter: 16px;
     --radius-hero: 20px;
     --hero-pad: 10px;
+    --header-h: 64px;
+    --space-section: 52px;
   }
 }
 
@@ -147,6 +149,22 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+/* Nothing may widen the page: 3D-transformed decoration (bento cubes, the
+   gallery fan, tilting cards) can escape overflow:hidden in Safari and let
+   the whole page pan sideways on phones. clip keeps position: sticky working. */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+@supports (overflow: clip) {
+  html,
+  body {
+    overflow-x: clip;
+  }
 }
 
 html {
@@ -782,7 +800,7 @@ kbd {
    page, a frosted pill once the page scrolls. */
 .site-header {
   position: fixed;
-  top: calc(var(--hero-pad) + 12px);
+  top: calc(var(--hero-pad) + 12px + env(safe-area-inset-top, 0px));
   right: 0;
   left: 0;
   z-index: 50;
@@ -990,6 +1008,38 @@ kbd {
 
   .menu-toggle {
     display: inline-grid;
+  }
+}
+
+@media (max-width: 640px) {
+  .site-header {
+    top: calc(var(--hero-pad) + 6px + env(safe-area-inset-top, 0px));
+  }
+
+  .site-header__inner {
+    width: calc(100% - 2 * (var(--hero-pad) + 6px));
+    height: 44px;
+    padding-inline: 12px 4px;
+  }
+
+  .brand {
+    gap: 8px;
+    font-size: 0.9375rem;
+  }
+
+  .brand__mark {
+    height: 20px;
+  }
+
+  .site-header .icon-btn {
+    width: 34px;
+    height: 34px;
+  }
+
+  .mobile-menu {
+    right: calc(var(--hero-pad) + 6px);
+    left: calc(var(--hero-pad) + 6px);
+    border-radius: 20px;
   }
 }
 
@@ -1669,6 +1719,7 @@ kbd {
   min-height: 232px;
   padding: 26px;
   overflow: hidden;
+  contain: paint;
   color: var(--text);
   background: var(--bg-subtle);
   border-radius: 28px;
@@ -2209,55 +2260,141 @@ kbd {
 }
 
 @media (max-width: 640px) {
+  /* Phones: pair the short facts two-up and trim every tile so the bento
+     reads as a quick glance, not a scroll of full-width cards. */
   .bento-grid {
-    gap: 12px;
+    gap: 10px;
   }
 
   .tile:nth-child(n) {
     grid-column: span 12;
-    min-height: 200px;
-    padding: 22px;
-    border-radius: 24px;
-  }
-
-  .tile--role:nth-child(n) {
-    min-height: 330px;
-  }
-
-  .tile--study:nth-child(n),
-  .tile--tools:nth-child(n) {
+    gap: 6px;
     min-height: 0;
-    gap: 18px;
+    padding: 18px;
+    border-radius: 20px;
+  }
+
+  .tile__label {
+    font-size: 0.6875rem;
+  }
+
+  .tile__value {
+    font-size: 1.875rem;
+  }
+
+  .tile__text {
+    max-width: 16ch;
+    font-size: 1.25rem;
+  }
+
+  .tile__desc {
+    margin-top: 6px;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+  }
+
+  /* Role: text left, a smaller stack of cubes on the right. */
+  .tile--role:nth-child(n) {
+    min-height: 168px;
+  }
+
+  .tile--role .tile__text {
+    max-width: calc(100% - 120px);
   }
 
   .art-cubes {
-    right: -6px;
-    scale: 0.86;
+    right: -14px;
+    bottom: -4px;
+    scale: 0.62;
     transform-origin: 100% 100%;
   }
 
+  .tile--blue:nth-child(n) {
+    min-height: 150px;
+  }
+
   .art-permit {
-    right: 14px;
-    scale: 0.8;
+    right: 10px;
+    bottom: -84px;
+    scale: 0.66;
     transform-origin: 100% 100%;
   }
 
   .tile--blue .tile__desc {
-    max-width: calc(100% - 150px);
+    max-width: calc(100% - 118px);
   }
 
-  .art-podium {
-    right: 22px;
-    scale: 0.78;
+  /* Two-up facts: no room for side art, so the object sits small in the
+     corner behind the text. */
+  .tile--based:nth-child(n),
+  .tile--speaks:nth-child(n),
+  .tile--grey:nth-child(n),
+  .tile--orange:nth-child(n) {
+    grid-column: span 6;
+    min-height: 168px;
+    padding: 16px;
+  }
+
+  .tile--based .tile__desc,
+  .tile--speaks .tile__desc {
+    margin-top: 2px;
+    font-size: 0.9375rem;
+    line-height: 1.3;
+  }
+
+  .tile--grey .tile__value,
+  .tile--orange .tile__value {
+    font-size: 1.5rem;
+    line-height: 1.05;
+  }
+
+  .tile--grey .tile__desc,
+  .tile--orange .tile__desc {
+    max-width: none;
+    font-size: 0.75rem;
+  }
+
+  .art-globe {
+    right: -22px;
+    bottom: -26px;
+    scale: 0.62;
     transform-origin: 100% 100%;
   }
 
-  .tile--grey .tile__desc {
-    max-width: calc(100% - 156px);
+  .art-bubbles {
+    right: 10px;
+    bottom: 10px;
+    scale: 0.72;
+    transform-origin: 100% 100%;
+  }
+
+  .art-podium,
+  .art-coins {
+    display: none;
+  }
+
+  .tile--ink:nth-child(n) {
+    min-height: 132px;
+  }
+
+  .tile--ink .tile__desc {
+    max-width: calc(100% - 90px);
+  }
+
+  .art-play {
+    right: 22px;
+    bottom: 26px;
+    scale: 0.7;
+    transform-origin: 100% 100%;
+  }
+
+  .tile--study:nth-child(n),
+  .tile--tools:nth-child(n) {
+    gap: 12px;
   }
 
   .keys li {
-    padding: 12px 14px;
+    padding: 10px 12px;
     font-size: 0.8125rem;
   }
 }
@@ -2270,6 +2407,7 @@ kbd {
 
 .browser {
   overflow: hidden;
+  contain: paint;
   background: var(--surface);
   border: 1px solid var(--border-strong);
   border-radius: var(--radius-lg);
@@ -2631,8 +2769,39 @@ kbd {
 }
 
 @media (max-width: 480px) {
+  /* Phones: one compact row per hobby, chip on the left. */
+  .bento,
+  .about .bento {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
   .bento__cell {
-    padding: var(--space-4);
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr);
+    column-gap: 14px;
+    row-gap: 2px;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 18px;
+  }
+
+  .bento__top {
+    grid-row: span 2;
+    width: 40px;
+    height: 40px;
+    margin: 0;
+    border-radius: 12px;
+  }
+
+  .bento__top svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bento__cell .card__text {
+    font-size: var(--fs-sm);
+    line-height: 1.45;
   }
 }
 
