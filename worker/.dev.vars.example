@@ -1,0 +1,4 @@
+# Copy to .dev.vars (gitignored) for local runs. Turnstile "always passes" test secret:
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+IP_HMAC_KEY=change-me-long-random
+ADMIN_TOKEN=change-me-long-random

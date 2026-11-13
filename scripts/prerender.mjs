@@ -30,7 +30,6 @@ const person = {
   familyName: 'Thufail',
   url: `${SITE_URL}/`,
   image: OG_IMAGE,
-  email: `mailto:${CONTACT.email}`,
   jobTitle: 'Information Systems student and project lead',
   description:
     'Dual-degree Information Systems student at Universiti Teknologi PETRONAS and Institut Teknologi Sepuluh Nopember who builds data analytics, blockchain and SAP ERP systems.',
@@ -56,7 +55,7 @@ const person = {
     'Finalist (Top 12 of 263 teams), Travoy Jasamarga × Marketeers WOW Case Competition 2026',
     '1st Place, Best Expo Stand, Agile Innovation Expo ITS 2024',
   ],
-  sameAs: [CONTACT.linkedinUrl, CONTACT.githubUrl],
+  sameAs: [CONTACT.githubUrl],
 };
 
 const website = {

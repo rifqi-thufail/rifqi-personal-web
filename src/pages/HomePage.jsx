@@ -1,24 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
 import {
   Activity,
   ArrowRight,
   ArrowUpRight,
   Award,
   Camera,
-  Check,
   Code,
   Compass,
-  Copy,
-  ExternalLink,
-  Mail,
-  Phone,
   Trophy,
   Video,
 } from 'lucide-react';
 import Gallery from '../components/Gallery';
-import { LinkedinIcon } from '../components/icons';
-import { CONTACT } from '../data/site';
-import { copyToClipboard } from '../utils/clipboard';
+import ContactGate from '../components/ContactGate';
 
 // The fact sheet beside the headline: who, where, what — readable in five seconds.
 const FACTS = [
@@ -124,26 +116,7 @@ const HOBBIES = [
   { name: 'Adventure', Icon: Compass, desc: 'Hiking and exploring outdoors.' },
 ];
 
-const CONTACT_LINKS = [
-  { label: 'Email Address', value: CONTACT.email, href: `mailto:${CONTACT.email}`, Icon: Mail, action: 'Send Mail' },
-  { label: 'LinkedIn Profile', value: CONTACT.linkedinLabel, href: CONTACT.linkedinUrl, Icon: LinkedinIcon, action: 'Connect', external: true },
-  { label: 'WhatsApp Chat', value: CONTACT.phone, href: CONTACT.whatsappUrl, Icon: Phone, action: 'Open Chat', external: true },
-];
-
 export default function HomePage() {
-  const [copied, setCopied] = useState('');
-  const copyTimer = useRef(null);
-
-  useEffect(() => () => clearTimeout(copyTimer.current), []);
-
-  const copyValue = async (value, label) => {
-    const ok = await copyToClipboard(value);
-    if (!ok) return;
-    setCopied(label);
-    clearTimeout(copyTimer.current);
-    copyTimer.current = setTimeout(() => setCopied(''), 2000);
-  };
-
   return (
     <>
       <section className="hero" data-parallax>
@@ -359,54 +332,12 @@ export default function HomePage() {
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">04</span>Connect</p>
             <h2 className="section-head__title">Let&rsquo;s Build Something Great</h2>
             <p className="section-head__sub">
-              Hiring an intern, or want to talk through a data, process or blockchain problem? Email is the
-              fastest way to reach me.
+              Hiring an intern, or want to talk through a data, process or blockchain problem? Send me a short note and
+              I will get back to you personally.
             </p>
           </div>
 
-          <ul className="contact__list">
-            {CONTACT_LINKS.map(({ label, value, href, Icon, action, external }) => (
-              <li key={label} className="card contact-card">
-                <div className="icon-tile" aria-hidden="true">
-                  <Icon size={18} />
-                </div>
-                <div className="contact-card__body">
-                  <span className="mono-label">{label}</span>
-                  <span className="contact-card__value">{value}</span>
-                </div>
-                <div className="contact-card__actions">
-                  <a
-                    className="btn btn-primary btn-sm"
-                    href={href}
-                    target={external ? '_blank' : undefined}
-                    rel={external ? 'me noreferrer' : undefined}
-                  >
-                    {action}
-                    {external && <ExternalLink size={13} aria-hidden="true" />}
-                  </a>
-                  <button
-                    type="button"
-                    className="btn btn-secondary btn-sm"
-                    onClick={() => copyValue(value, label)}
-                    aria-label={`Copy ${label}`}
-                  >
-                    {copied === label ? (
-                      <>
-                        <Check size={14} aria-hidden="true" /> Copied
-                      </>
-                    ) : (
-                      <>
-                        <Copy size={14} aria-hidden="true" /> Copy
-                      </>
-                    )}
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
-          <span className="sr-only" role="status">
-            {copied ? `${copied} copied to clipboard` : ''}
-          </span>
+          <ContactGate />
         </div>
       </section>
     </>

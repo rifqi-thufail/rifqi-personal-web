@@ -1,0 +1,12 @@
+{
+  "name": "thufail-leads",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "@cloudflare/config": "^0.32.0",
+    "wrangler": "^4.0.0"
+  }
+}

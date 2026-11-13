@@ -23,3 +23,13 @@ scratch
 *.njsproj
 *.sln
 *.sw?
+
+# worker secrets
+worker/.dev.vars
+worker/.wrangler
+.env*
+!.env.example
+worker/.cloudflare
+
+# personal CV (contains phone number) — keep out of the public repo
+cv.md

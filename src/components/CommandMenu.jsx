@@ -1,13 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Check, ExternalLink, Mail, Moon, Search, Sparkles, Sun, X } from 'lucide-react';
-import { CONTACT } from '../data/site';
-import { copyToClipboard } from '../utils/clipboard';
+import { ArrowRight, Moon, Search, Sparkles, Sun, X } from 'lucide-react';
 
 function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [copyState, setCopyState] = useState('idle'); // 'idle' | 'copied' | 'failed'
   const inputRef = useRef(null);
   const closeRef = useRef(null);
   const listRef = useRef(null);
@@ -24,13 +21,6 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
     };
   }, []);
 
-  // Give the "copied" confirmation a moment on screen, then close.
-  useEffect(() => {
-    if (copyState !== 'copied') return undefined;
-    const timer = setTimeout(onClose, 1100);
-    return () => clearTimeout(timer);
-  }, [copyState, onClose]);
-
   const items = useMemo(() => {
     const go = (page) => () => {
       onNavigate(page);
@@ -43,36 +33,12 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
       { id: 'skills', label: 'Go to Skills & Certifications', category: 'Navigation', icon: <ArrowRight size={15} />, action: go('skills') },
       {
         id: 'contact',
-        label: 'Go to Contact Info',
+        label: 'Get in Touch',
         category: 'Navigation',
         icon: <ArrowRight size={15} />,
         action: () => {
           onClose();
           onContact();
-        },
-      },
-      {
-        id: 'linkedin',
-        label: 'Open LinkedIn Profile',
-        category: 'Links',
-        icon: <ExternalLink size={15} />,
-        action: () => {
-          window.open(CONTACT.linkedinUrl, '_blank', 'noopener,noreferrer');
-          onClose();
-        },
-      },
-      {
-        id: 'email',
-        label:
-          copyState === 'copied' ? 'Email copied to clipboard'
-          : copyState === 'failed' ? `Copy failed — ${CONTACT.email}`
-          : 'Copy Email to Clipboard',
-        category: 'Contact',
-        icon: copyState === 'copied' ? <Check size={15} /> : <Mail size={15} />,
-        success: copyState === 'copied',
-        action: async () => {
-          const ok = await copyToClipboard(CONTACT.email);
-          setCopyState(ok ? 'copied' : 'failed');
         },
       },
       {
@@ -103,7 +69,7 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
         },
       },
     ];
-  }, [copyState, onClose, onContact, onNavigate, onToggleTheme, theme]);
+  }, [onClose, onContact, onNavigate, onToggleTheme, theme]);
 
   const q = query.trim().toLowerCase();
   const filtered = items.filter(
@@ -209,10 +175,6 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
           <span><kbd>↵</kbd> Select</span>
           <span><kbd>Esc</kbd> Close</span>
         </div>
-
-        <span className="sr-only" role="status">
-          {copyState === 'copied' ? 'Email copied to clipboard' : copyState === 'failed' ? 'Copy failed' : ''}
-        </span>
       </motion.div>
     </motion.div>
   );

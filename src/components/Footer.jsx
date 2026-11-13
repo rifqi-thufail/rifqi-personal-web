@@ -39,11 +39,8 @@ export default function Footer() {
           <div className="site-footer__col">
             <h2>Contact</h2>
             <ul>
-              <li><a href={`mailto:${CONTACT.email}`}>Email</a></li>
-              <li><a href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a></li>
-              <li><a href={CONTACT.linkedinUrl} target="_blank" rel="me noreferrer">LinkedIn</a></li>
+              <li><a href="/#contact">Get in touch</a></li>
               <li><a href={CONTACT.githubUrl} target="_blank" rel="me noreferrer">GitHub</a></li>
-              <li><a href="/#contact">All contact details</a></li>
             </ul>
           </div>
         </div>
