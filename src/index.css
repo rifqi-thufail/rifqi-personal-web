@@ -421,6 +421,176 @@ html.theme-transitioning *::after {
   transform: translate3d(calc(var(--px, 0) * 10px), calc(var(--py, 0) * 6px), 0);
 }
 
+/* Floating glass cubes (components/Blocks3D.jsx): real CSS 3D boxes that sit
+   in the foreground, above the content, and ignore the pointer. */
+.blocks {
+  position: absolute;
+  z-index: 2;
+  width: 400px;
+  height: 320px;
+  pointer-events: none;
+  perspective: 900px;
+}
+
+.blocks--hero {
+  top: calc(var(--header-h) - 12px);
+  right: max(-40px, calc((100vw - var(--container)) / 2 - 150px));
+  scale: 0.85;
+  transform-origin: 100% 0;
+}
+
+.blocks--header {
+  top: 50%;
+  right: max(0px, calc((100vw - var(--container)) / 2));
+  margin-top: calc(var(--header-h) / 2 - 160px);
+}
+
+/* Section-edge cubes: hang off the side of the container and drift faster
+   than the page scrolls, so they read as nearer than the content. */
+.section--fg {
+  position: relative;
+  overflow-x: clip;
+}
+
+.blocks--float {
+  top: clamp(24px, 5vw, 72px);
+  width: 220px;
+  height: 240px;
+}
+
+.blocks--right {
+  right: max(-70px, calc((100vw - var(--container)) / 2 - 190px));
+}
+
+.blocks--left {
+  left: max(-120px, calc((100vw - var(--container)) / 2 - 210px));
+}
+
+.blocks--float .blocks__stage {
+  transform: rotateX(-18deg) rotateY(28deg);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .blocks--float {
+      animation: drift linear both;
+      animation-timeline: view();
+    }
+  }
+}
+
+@keyframes drift {
+  from {
+    translate: 0 140px;
+  }
+
+  to {
+    translate: 0 -140px;
+  }
+}
+
+.blocks__stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(-16deg + var(--py, 0) * -12deg)) rotateY(calc(-24deg + var(--px, 0) * 18deg));
+  transition: transform 0.6s var(--ease);
+}
+
+.cube {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  width: var(--s);
+  height: var(--s);
+  transform-style: preserve-3d;
+  transform: translateZ(var(--z));
+  animation: cube-float var(--float) ease-in-out var(--delay) infinite alternate;
+}
+
+.cube__spin {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  animation: cube-spin var(--spin) linear var(--delay) infinite;
+}
+
+.cube__face {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--blue-soft), transparent 80%);
+  border: 1px solid var(--blue-border);
+  box-shadow: inset 0 0 24px var(--blue-soft);
+}
+
+.cube--red .cube__face {
+  background: linear-gradient(135deg, var(--red-soft), transparent 80%);
+  border-color: var(--red-border);
+  box-shadow: inset 0 0 24px var(--red-soft);
+}
+
+.cube__face--front {
+  transform: translateZ(calc(var(--s) / 2));
+}
+
+.cube__face--back {
+  transform: rotateY(180deg) translateZ(calc(var(--s) / 2));
+}
+
+.cube__face--right {
+  transform: rotateY(90deg) translateZ(calc(var(--s) / 2));
+}
+
+.cube__face--left {
+  transform: rotateY(-90deg) translateZ(calc(var(--s) / 2));
+}
+
+.cube__face--top {
+  transform: rotateX(90deg) translateZ(calc(var(--s) / 2));
+}
+
+.cube__face--bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--s) / 2));
+}
+
+@keyframes cube-spin {
+  to {
+    transform: rotateX(360deg) rotateY(360deg);
+  }
+}
+
+@keyframes cube-float {
+  to {
+    translate: 0 -18px;
+  }
+}
+
+@media (max-width: 900px) {
+  .blocks {
+    opacity: 0.45;
+    scale: 0.6;
+    transform-origin: 100% 0;
+  }
+
+  .blocks--hero {
+    top: calc(var(--header-h) - 8px);
+    right: -70px;
+  }
+
+  .blocks--header {
+    right: -90px;
+  }
+
+  .blocks--float {
+    top: 8px;
+  }
+
+  .blocks--left {
+    left: auto;
+    right: -70px;
+  }
+}
+
 /* ── 4. Primitives ─────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
@@ -2747,6 +2917,11 @@ html.theme-transitioning *::after {
 
   .pill__dot::after,
   .rise {
+    animation: none;
+  }
+
+  .cube,
+  .cube__spin {
     animation: none;
   }
 

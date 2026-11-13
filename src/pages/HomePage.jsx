@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import Gallery from '../components/Gallery';
 import ContactGate from '../components/ContactGate';
+import Blocks3D from '../components/Blocks3D';
 
 // The fact sheet beside the headline: who, where, what — readable in five seconds.
 const FACTS = [
@@ -121,6 +122,7 @@ export default function HomePage() {
     <>
       <section className="hero" data-parallax>
         <div className="backdrop" aria-hidden="true" />
+        <Blocks3D className="blocks--hero" />
         <div className="container hero__grid">
           <div className="hero__copy">
             <p className="pill rise">
@@ -195,7 +197,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="work" className="section">
+      <section id="work" className="section section--fg">
+        <Blocks3D variant="pair" className="blocks--float blocks--right" />
         <div className="container">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">01</span>Selected Work</p>
@@ -283,7 +286,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="about" className="section">
+      <section id="about" className="section section--fg">
+        <Blocks3D variant="pair" className="blocks--float blocks--left" />
         <div className="container about">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">03</span>About</p>
@@ -326,7 +330,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="contact" className="section section--subtle">
+      <section id="contact" className="section section--subtle section--fg">
+        <Blocks3D variant="pair" className="blocks--float blocks--right" />
         <div className="container contact">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">04</span>Connect</p>
