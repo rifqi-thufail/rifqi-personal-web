@@ -3707,14 +3707,228 @@ kbd {
 }
 
 /* ── 15. Skills ────────────────────────────────────────────────────────── */
+/* Each category opens with a bento-style panel: a tinted face and a small
+   object built from CSS 3D transforms. The whole card tilts with the pointer. */
 .skill-card__head {
+  position: relative;
+  isolation: isolate;
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
+  flex-direction: column;
   justify-content: space-between;
-  gap: var(--space-1) var(--space-4);
-  padding: 20px var(--space-5);
-  border-bottom: 1px solid var(--border);
+  gap: var(--space-4);
+  min-height: 168px;
+  padding: 22px var(--space-5);
+  overflow: hidden;
+  contain: paint;
+  color: var(--text);
+  border-radius: calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px) 0 0;
+}
+
+.skill-card__head .card__title,
+.skill-card__head .mono-label {
+  max-width: calc(100% - 150px);
+  color: inherit;
+}
+
+.skill-card__head .card__title {
+  font-size: clamp(1.25rem, 1.05rem + 0.7vw, 1.625rem);
+  font-weight: 500;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+}
+
+.skill-card__head .mono-label {
+  opacity: 0.74;
+}
+
+.skill-card__head--sky {
+  background: linear-gradient(165deg, #dbe8ff 0%, var(--bg-subtle) 78%);
+}
+
+.skill-card__head--blue {
+  color: #fff;
+  background: linear-gradient(150deg, #1a8be4 0%, #0042b8 78%);
+}
+
+.skill-card__head--orange {
+  color: var(--orange-ink);
+  background: var(--orange-solid);
+}
+
+.skill-card__head--orange .mono-label {
+  opacity: 1;
+}
+
+.skill-card__head--ink {
+  color: #fff;
+  background: #0d1321;
+}
+
+.skill-art {
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Technical: glass blocks, the same parts as the home page role tile. */
+.skill-art--cubes {
+  right: 26px;
+  bottom: 14px;
+  width: 140px;
+  height: 130px;
+  perspective: 700px;
+}
+
+/* Systems: three plates of a stack, floating apart. */
+.skill-art--layers {
+  right: 30px;
+  bottom: 8px;
+  width: 132px;
+  height: 132px;
+  perspective: 900px;
+}
+
+.layers {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform: rotateX(60deg) rotateZ(-38deg);
+}
+
+.layers i {
+  position: absolute;
+  inset: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(214, 232, 255, 0.82));
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 18px;
+  box-shadow: 0 0 0 1px rgba(4, 30, 110, 0.12);
+  transform: translateZ(var(--z));
+  animation: layer-float 5s ease-in-out var(--d, 0s) infinite alternate;
+}
+
+.layers i:nth-child(1) {
+  --z: -6px;
+  background: rgba(4, 24, 96, 0.42);
+  border-color: rgba(255, 255, 255, 0.22);
+}
+
+.layers i:nth-child(2) {
+  --z: 22px;
+  --d: -1.6s;
+  background: linear-gradient(135deg, rgba(160, 208, 255, 0.92), rgba(90, 151, 255, 0.78));
+}
+
+.layers i:nth-child(3) {
+  --z: 50px;
+  --d: -3.2s;
+}
+
+/* A dot grid on the top plate, like a board. */
+.layers i:nth-child(3)::after {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  background: radial-gradient(circle, var(--orange) 0 3px, transparent 3.5px) 0 0 / 16px 16px;
+  opacity: 0.9;
+}
+
+@keyframes layer-float {
+  to {
+    transform: translateZ(calc(var(--z) + 8px));
+  }
+}
+
+/* Certifications: a thick seal with a tick and two ribbon tails. */
+.skill-art--seal {
+  right: 38px;
+  bottom: 22px;
+  width: 96px;
+  height: 118px;
+  transform: perspective(600px) rotateX(24deg) rotateZ(-12deg);
+}
+
+.seal {
+  position: absolute;
+  inset: 0;
+}
+
+.seal i {
+  position: absolute;
+  top: 58px;
+  left: 22px;
+  width: 22px;
+  height: 56px;
+  background: #0050d8;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 80%, 0 100%);
+  transform: rotate(14deg);
+}
+
+.seal i + i {
+  left: 52px;
+  background: #0042b8;
+  transform: rotate(-14deg);
+}
+
+.seal b {
+  position: absolute;
+  top: 0;
+  left: 6px;
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  background: radial-gradient(circle at 34% 28%, #fff 0%, #fff4ea 58%, #ffe0c8 100%);
+  border-radius: 50%;
+  box-shadow:
+    inset 0 0 0 7px #fffaf5,
+    inset 0 0 0 9px var(--orange),
+    0 2px 0 #f3c7a4,
+    0 4px 0 #efbd96,
+    0 6px 0 #eab288,
+    0 8px 0 #e4a679,
+    0 22px 24px rgba(120, 40, 0, 0.32);
+}
+
+.seal b::after {
+  content: '';
+  width: 26px;
+  height: 14px;
+  margin-top: -6px;
+  border-bottom: 5px solid var(--orange);
+  border-left: 5px solid var(--orange);
+  border-radius: 2px;
+  transform: rotate(-45deg);
+}
+
+/* Languages: the speech bubbles from the home page. */
+.skill-card__head .art-bubbles {
+  right: 30px;
+  bottom: 20px;
+}
+
+.skill-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-card .skill-list {
+  flex: 1;
+  overflow: hidden;
+  border-radius: 0 0 calc(var(--radius-lg) - 1px) calc(var(--radius-lg) - 1px);
+}
+
+/* Rows lift off the card as the pointer crosses them. */
+.skill-card .skill-list li {
+  transition:
+    background-color 0.2s ease,
+    box-shadow 0.25s var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .skill-card .skill-list li:hover {
+    background: var(--surface);
+    box-shadow: inset 0 -3px 0 var(--blue-soft);
+  }
 }
 
 .skill-list {
@@ -3750,6 +3964,22 @@ kbd {
 }
 
 @media (max-width: 480px) {
+  .skill-card__head {
+    min-height: 136px;
+    padding: 18px var(--space-4);
+  }
+
+  .skill-card__head .card__title,
+  .skill-card__head .mono-label {
+    max-width: calc(100% - 112px);
+  }
+
+  .skill-art {
+    scale: 0.78;
+    transform-origin: 100% 100%;
+    translate: 14px 6px;
+  }
+
   .skill-list {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -3799,7 +4029,8 @@ kbd {
     translate: none;
   }
 
-  .cube {
+  .cube,
+  .layers i {
     animation: none;
   }
 
