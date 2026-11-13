@@ -143,6 +143,7 @@ export default function ExperiencePage() {
         My academic background and professional engagements in engineering and operations.
       </PageHeader>
 
+      <div className="sheet">
       <section className="section">
         <div className="container">
           <h2 className="block-title"><span className="eyebrow__num" aria-hidden="true">01</span>Education</h2>
@@ -217,6 +218,7 @@ export default function ExperiencePage() {
           </div>
         </div>
       </section>
+      </div>
     </>
   );
 }

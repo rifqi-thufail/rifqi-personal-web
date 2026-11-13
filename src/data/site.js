@@ -1,10 +1,11 @@
 export const SITE_URL = 'https://thufail.dev';
 export const SITE_NAME = 'Rifqi Aufa Thufail';
 
-// Private contact details (email, phone, WhatsApp, LinkedIn) are NOT stored in this repo or
+// Private contact details (email, phone, WhatsApp) are NOT stored in this repo or
 // bundle, and no API returns them. Visitors leave their details through the contact form instead.
 export const CONTACT = {
   githubUrl: 'https://github.com/rifqi-thufail',
+  linkedinUrl: 'https://www.linkedin.com/in/rifqiaufathufail/',
 };
 
 export const NAV = [

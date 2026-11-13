@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Menu, Moon, Search, Sun, X } from 'lucide-react';
+import { ArrowRight, Menu, Search, X } from 'lucide-react';
 import { NAV } from '../data/site';
 import { useIsMac } from '../utils/client';
 
-export default function Header({ activePage, theme, onToggleTheme, onOpenCommandMenu, onContact }) {
+export default function Header({ activePage, onOpenCommandMenu, onContact }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const isMac = useIsMac();
@@ -35,13 +35,12 @@ export default function Header({ activePage, theme, onToggleTheme, onOpenCommand
   }, [mobileOpen]);
 
   const closeMobile = () => setMobileOpen(false);
-  const themeLabel = theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
 
   return (
     <header className={`site-header${scrolled || mobileOpen ? ' is-scrolled' : ''}`}>
       <div className="container site-header__inner">
         <a href="/" className="brand" onClick={closeMobile} aria-label="thufail.dev — home">
-          <span className="brand__mark" aria-hidden="true" />
+          <img className="brand__mark" src="/logo.svg" alt="" width="22" height="26" />
           <span>thufail.dev</span>
         </a>
 
@@ -63,10 +62,6 @@ export default function Header({ activePage, theme, onToggleTheme, onOpenCommand
             <Search size={14} aria-hidden="true" />
             <span>Search</span>
             <kbd>{isMac ? '⌘K' : 'Ctrl K'}</kbd>
-          </button>
-
-          <button type="button" className="icon-btn" onClick={onToggleTheme} aria-label={themeLabel} title={themeLabel}>
-            {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
           </button>
 
           <a className="btn btn-hot btn-sm site-header__cta" href="/#contact">

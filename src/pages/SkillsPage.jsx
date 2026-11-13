@@ -50,6 +50,7 @@ export default function SkillsPage() {
         Validated academic knowledge, enterprise tooling expertise, and multi-cultural communication skills.
       </PageHeader>
 
+      <div className="sheet">
       <section className="section">
         <div className="container grid grid--2">
           {CATEGORIES.map((cat) => (
@@ -70,6 +71,7 @@ export default function SkillsPage() {
           ))}
         </div>
       </section>
+      </div>
     </>
   );
 }

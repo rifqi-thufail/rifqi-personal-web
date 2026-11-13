@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, Moon, Search, Sparkles, Sun, X } from 'lucide-react';
+import { ArrowRight, Search, Sparkles, X } from 'lucide-react';
 
-function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
+function Palette({ onClose, onNavigate, onContact }) {
   const [query, setQuery] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const inputRef = useRef(null);
@@ -42,16 +42,6 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
         },
       },
       {
-        id: 'theme',
-        label: theme === 'dark' ? 'Switch to Light Theme' : 'Switch to Dark Theme',
-        category: 'Preferences',
-        icon: theme === 'dark' ? <Sun size={15} /> : <Moon size={15} />,
-        action: () => {
-          onToggleTheme();
-          onClose();
-        },
-      },
-      {
         id: 'confetti',
         label: 'Trigger Confetti',
         category: 'Fun',
@@ -62,14 +52,14 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
             particleCount: 100,
             spread: 70,
             origin: { y: 0.6 },
-            colors: ['#2a63f6', '#7aa2ff', '#e0213a', '#ffffff'],
+            colors: ['#0050d8', '#30bff9', '#ff6b00', '#ffffff'],
             disableForReducedMotion: true,
           });
           onClose();
         },
       },
     ];
-  }, [onClose, onContact, onNavigate, onToggleTheme, theme]);
+  }, [onClose, onContact, onNavigate]);
 
   const q = query.trim().toLowerCase();
   const filtered = items.filter(

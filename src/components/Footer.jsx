@@ -8,7 +8,7 @@ export default function Footer() {
         <div className="site-footer__grid">
           <div className="site-footer__brand">
             <a href="/" className="brand" aria-label="thufail.dev — home">
-              <span className="brand__mark" aria-hidden="true" />
+              <img className="brand__mark" src="/logo.svg" alt="" width="22" height="26" />
               <span>thufail.dev</span>
             </a>
             <p>

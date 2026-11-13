@@ -14,7 +14,6 @@ import SkillsPage from './pages/SkillsPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 import { initPointerFx } from './utils/pointerFx';
-import { setTheme, useTheme } from './utils/theme';
 import { legacyHashPath, metaFor, parsePath, pathFor } from './router';
 
 function prefersReducedMotion() {
@@ -38,7 +37,6 @@ function scrollToHash(hash) {
 
 export default function App({ initialPath = '/' }) {
   const [route, setRoute] = useState(() => parsePath(initialPath));
-  const theme = useTheme();
   const [cmdOpen, setCmdOpen] = useState(false);
   const [showTop, setShowTop] = useState(false);
 
@@ -118,13 +116,6 @@ export default function App({ initialPath = '/' }) {
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
 
-  const toggleTheme = useCallback(() => {
-    const root = document.documentElement;
-    root.classList.add('theme-transitioning');
-    setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
-    setTimeout(() => root.classList.remove('theme-transitioning'), 350);
-  }, []);
-
   const navigate = useCallback((target) => go(pathFor(target)), [go]);
 
   const goToContact = useCallback(() => go('/', '#contact'), [go]);
@@ -161,8 +152,6 @@ export default function App({ initialPath = '/' }) {
 
         <Header
           activePage={page}
-          theme={theme}
-          onToggleTheme={toggleTheme}
           onOpenCommandMenu={() => setCmdOpen(true)}
           onContact={goToContact}
         />
@@ -172,8 +161,6 @@ export default function App({ initialPath = '/' }) {
           onClose={closeCmd}
           onNavigate={navigate}
           onContact={goToContact}
-          onToggleTheme={toggleTheme}
-          theme={theme}
         />
 
         <main id="main" className="app__main" tabIndex={-1}>

@@ -2,18 +2,31 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ArrowLeft, ArrowRight, Award, Briefcase, ChevronLeft, ChevronRight, Maximize2 } from 'lucide-react';
 import PageHeader from '../components/PageHeader';
 import { PROJECTS } from '../data/portfolioData';
+import { CONTACT } from '../data/site';
+import { LinkedinIcon } from '../components/icons';
 
 function ProjectList() {
   return (
     <>
-      <PageHeader eyebrow="Hall of Fame" title="Portfolio & Projects">
+      <PageHeader
+        eyebrow="Hall of Fame"
+        title="Portfolio & Projects"
+        footer={
+          <div className="hero__ctas">
+            <a className="btn btn-primary" href={CONTACT.linkedinUrl} target="_blank" rel="noopener noreferrer">
+              <LinkedinIcon size={16} /> Find more on my LinkedIn page <ArrowRight size={16} aria-hidden="true" />
+            </a>
+          </div>
+        }
+      >
         A record of consulting projects, technical designs, and corporate strategies.
       </PageHeader>
 
+      <div className="sheet">
       <section className="section">
         <div className="container grid grid--2">
           {PROJECTS.map((proj) => (
-            <a key={proj.id} href={`/portfolio/${proj.id}/`} className="card tilt project-card">
+            <a key={proj.id} href={`/portfolio/${proj.id}/`} className="card project-card">
               {proj.image && (
                 <div className="project-card__media">
                   <img src={proj.image} alt={proj.title} loading="lazy" />
@@ -36,6 +49,7 @@ function ProjectList() {
           ))}
         </div>
       </section>
+      </div>
     </>
   );
 }
@@ -114,6 +128,7 @@ function ProjectDetail({ project }) {
         {project.subtitle}
       </PageHeader>
 
+      <div className="sheet">
       {project.document ? (
         <>
           <section className="section section--tight">
@@ -177,6 +192,7 @@ function ProjectDetail({ project }) {
         </div>
       </section>
       )}
+      </div>
     </>
   );
 }

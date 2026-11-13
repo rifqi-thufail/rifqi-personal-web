@@ -1,42 +1,63 @@
 import {
-  Activity,
   ArrowRight,
   ArrowUpRight,
   Award,
+  Briefcase,
   Camera,
   Code,
   Compass,
+  FolderOpen,
+  Layers,
+  Mail,
   Trophy,
   Video,
 } from 'lucide-react';
 import Gallery from '../components/Gallery';
 import ContactGate from '../components/ContactGate';
-import Blocks3D from '../components/Blocks3D';
+import HeroShell from '../components/HeroShell';
+import PartnerMarquee from '../components/PartnerMarquee';
 
-// The fact sheet beside the headline: who, where, what — readable in five seconds.
-const FACTS = [
-  { term: 'Role', detail: 'Information Systems student, team lead on data and blockchain projects' },
-  { term: 'Based in', detail: 'Perak, Malaysia and Surabaya, Indonesia' },
+// The glass cards along the bottom of the hero: one door per part of the site.
+const DOORS = [
   {
-    term: 'Studying',
-    detail: (
-      <>
-        Universiti Teknologi PETRONAS — CGPA 3.52, Dean&rsquo;s List
-        <br />
-        Institut Teknologi Sepuluh Nopember — CGPA 3.56
-      </>
-    ),
+    Icon: Briefcase,
+    label: 'Experience',
+    line: 'Tech lead on GovChain Permit, project lead on FarmSync.',
+    href: '/experience/',
   },
-  { term: 'Works with', detail: 'Power BI, SAP S/4HANA, Python, React, EVM smart contracts' },
-  { term: 'Speaks', detail: 'English (IELTS 7.0), Bahasa Indonesia, Bahasa Melayu' },
+  {
+    Icon: FolderOpen,
+    label: 'Portfolio',
+    line: 'A Power BI scorecard and an enterprise architecture plan, slide by slide.',
+    href: '/portfolio/',
+  },
+  {
+    Icon: Layers,
+    label: 'Skills',
+    line: 'Power BI, SAP S/4HANA, Python, React and EVM smart contracts.',
+    href: '/skills/',
+  },
+  {
+    Icon: Mail,
+    label: 'Contact',
+    line: 'Open to internships from September 2026 to April 2027.',
+    href: '/#contact',
+  },
 ];
 
-const STATS = [
-  { value: '1 month', label: 'From kickoff to a working GovChain Permit MVP, leading a team of four' },
-  { value: '2nd of 300+', label: 'Telkomsel × IS Expo 2025 national business case competition' },
-  { value: 'Top 12 of 263', label: 'Teams at the Travoy Jasamarga × Marketeers WOW Case Competition' },
-  { value: '400K+', label: 'Views on videos I produced for Jakarta International MUN' },
+// Decorative glass blocks in the first bento tile.
+const CUBES = [
+  { x: '96px', y: '70px', s: '104px', t: '7s', d: '0s' },
+  { x: '18px', y: '28px', s: '56px', t: '6s', d: '-2s', tone: 'orange' },
+  { x: '44px', y: '158px', s: '40px', t: '5s', d: '-1s' },
 ];
+
+const STUDY = [
+  { uni: 'Universiti Teknologi PETRONAS', note: 'Perak, Malaysia · Dean’s List', cgpa: '3.52' },
+  { uni: 'Institut Teknologi Sepuluh Nopember', note: 'Surabaya, Indonesia', cgpa: '3.56' },
+];
+
+const TOOLS = ['Power BI', 'SAP S/4HANA', 'Python', 'React', 'EVM smart contracts'];
 
 const WORK = [
   {
@@ -97,22 +118,36 @@ const EXTRA_ACHIEVEMENTS = [
   'Markplus Institute bluChamp Business Plan Certified',
 ];
 
-const PARTNERS = [
-  { name: 'Indonesia Blockchain Center', logo: '/partners/indonesia-blockchain-center.png' },
-  { name: 'Universiti Teknologi PETRONAS', logo: '/partners/universiti-teknologi-petronas.png' },
-  { name: 'Institut Teknologi Sepuluh Nopember', logo: '/partners/institut-teknologi-sepuluh-nopember.svg' },
-  { name: 'PT. United Tractors', logo: '/partners/pt-united-tractors.svg' },
-  { name: 'Jasa Marga', logo: '/partners/jasa-marga.png' },
-  { name: 'Travoy', logo: '/partners/travoy.png' },
-  { name: 'Telkomsel', logo: '/partners/telkomsel.png' },
-  { name: 'MarkPlus Inc', logo: '/partners/markplus-inc.png' },
-];
+
+// Lucide has no badminton icon, so this is a shuttlecock in the same stroke style.
+function Shuttlecock({ size = 24, ...props }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <circle cx="7" cy="17" r="3" />
+      <path d="M9.2 14.8 L18.5 5.5" />
+      <path d="M12 12 L13.5 6.5 L20 4" />
+      <path d="M12 12 L17.5 10.5 L20 4" />
+      <path d="M10.5 13.5 L11 8.5" />
+    </svg>
+  );
+}
 
 const HOBBIES = [
   { name: 'Videography', Icon: Video, desc: 'Long-form event films and short social clips, shot and edited myself.' },
   { name: 'Photography', Icon: Camera, desc: 'Documenting the events and people I work with.' },
   { name: 'Coding projects', Icon: Code, desc: 'Side builds in React and smart contracts — this site included.' },
-  { name: 'Badminton', Icon: Activity, desc: 'Fast games to stay sharp between deadlines.' },
+  { name: 'Badminton', Icon: Shuttlecock, desc: 'Fast games to stay sharp between deadlines.' },
   { name: 'Basketball', Icon: Trophy, desc: 'Team play and strategy on the court.' },
   { name: 'Adventure', Icon: Compass, desc: 'Hiking and exploring outdoors.' },
 ];
@@ -120,133 +155,167 @@ const HOBBIES = [
 export default function HomePage() {
   return (
     <>
-      <section className="hero" data-parallax>
-        <div className="backdrop" aria-hidden="true" />
-        <div className="container hero__grid">
-          <div className="hero__copy">
-            <p className="pill rise">
-              <span className="pill__dot" aria-hidden="true" />
-              Available for internship · Sep 2026 – Apr 2027
-            </p>
+      <HeroShell>
+        <h1 className="hero__title rise">
+          Rifqi Aufa Thufail
+          <span>builds systems people can verify</span>
+        </h1>
 
-            <h1 className="hero__title rise" style={{ '--d': '60ms' }}>
-              Rifqi Aufa <span>Thufail</span>
-            </h1>
+        <p className="hero__lead rise" style={{ '--d': '140ms' }}>
+          I turn slow, paper-heavy processes into data analytics, blockchain and ERP systems, as an
+          Information Systems student leading teams across Malaysia and Indonesia.
+        </p>
 
-            <p className="hero__lead rise" style={{ '--d': '120ms' }}>
-              I turn slow, paper-heavy processes into data and blockchain systems people can verify.
-            </p>
+        <div className="hero__ctas rise" style={{ '--d': '200ms' }}>
+          <a className="btn btn-primary" href="#work">
+            See the work <ArrowRight size={16} aria-hidden="true" />
+          </a>
+          <a className="btn btn-ghost" href="/#contact">
+            Get in touch <ArrowRight size={16} aria-hidden="true" />
+          </a>
+        </div>
 
-            <p className="hero__sub rise" style={{ '--d': '180ms' }}>
+        <nav className="doors rise" style={{ '--d': '260ms' }} aria-label="Explore the site">
+          {DOORS.map(({ Icon, label, line, href }) => (
+            <a key={label} className="door" href={href}>
+              <span className="door__icon" aria-hidden="true">
+                <Icon size={20} />
+              </span>
+              <span className="door__label">{label}</span>
+              <span className="door__line">{line}</span>
+              <span className="door__arrow" aria-hidden="true">
+                <ArrowRight size={16} />
+              </span>
+            </a>
+          ))}
+        </nav>
+      </HeroShell>
+
+      <div className="sheet">
+      <section className="partners" aria-label="Collaborated with and studied at">
+        <p className="mono-label partners__label">Collaborated With &amp; Studied At</p>
+        <PartnerMarquee />
+      </section>
+
+      <section id="glance" className="section">
+        <div className="container">
+          <div className="section-head">
+            <p className="eyebrow">At a glance</p>
+            <h2 className="section-head__title">
+              Data, blockchain and ERP systems, <em>led end to end</em>
+            </h2>
+            <p className="section-head__sub">
               I&rsquo;m an Information Systems student on a dual degree between{' '}
               <strong>Universiti Teknologi PETRONAS</strong> in Malaysia and <strong>ITS Surabaya</strong> in
               Indonesia. I&rsquo;ve led teams that shipped an on-chain permit system presented to Surabaya City
               Government, a KPI dashboard for PT United Tractors, and an ESG platform that took 2nd place at a
               national case competition.
             </p>
-
-            <div className="hero__ctas rise" style={{ '--d': '240ms' }}>
-              <a className="btn btn-primary" href="#work">
-                See the work <ArrowRight size={16} aria-hidden="true" />
-              </a>
-              <a className="btn btn-secondary" href="/#contact">
-                Get in touch <ArrowRight size={16} aria-hidden="true" />
-              </a>
-            </div>
           </div>
 
-          <div className="scene rise" style={{ '--d': '200ms' }}>
-            <div className="scene__stage">
-              {/* Decorative layers around the fact sheet: a permit, a chip, a token, a KPI tile. */}
-              <div className="scene__doc" aria-hidden="true">
-                <div className="scene__doc-head">
-                  <span className="scene__doc-seal" />
-                  <span className="scene__doc-lines">
-                    <i />
-                    <i />
-                  </span>
-                </div>
-                <p className="scene__doc-title">Business Permit</p>
-                <div className="scene__doc-body">
-                  <span className="scene__qr" />
-                  <span className="scene__doc-lines">
-                    <i />
-                    <i />
-                    <i />
-                    <i />
-                  </span>
-                </div>
-                <span className="scene__stamp">Verified</span>
-              </div>
-
-              <aside className="card facts scene__panel" aria-label="Rifqi at a glance">
-                <p className="mono-label facts__label">At a glance</p>
-                <dl className="facts__list">
-                  {FACTS.map(({ term, detail }) => (
-                    <div key={term} className="facts__row">
-                      <dt>{term}</dt>
-                      <dd>{detail}</dd>
+          <ul className="bento-grid" aria-label="Rifqi at a glance">
+            <li className="tile tilt tile--role">
+              <p className="tile__label">Role</p>
+              <p className="tile__text">Information Systems student, team lead on data and blockchain projects</p>
+              <div className="tile__art art-cubes" aria-hidden="true">
+                <div className="art-cubes__stage">
+                  {CUBES.map((c) => (
+                    <div
+                      key={c.x}
+                      className={`cube${c.tone ? ` cube--${c.tone}` : ''}`}
+                      style={{ '--x': c.x, '--y': c.y, '--s': c.s, '--t': c.t, '--d': c.d }}
+                    >
+                      <span /><span /><span /><span /><span /><span />
                     </div>
                   ))}
-                </dl>
-              </aside>
-
-              <p className="scene__chip" aria-hidden="true">
-                <span className="scene__chip-dot" />
-                Verified on-chain
-              </p>
-
-              <div className="scene__coin" aria-hidden="true">
-                <span />
-              </div>
-
-              <div className="scene__kpi" aria-hidden="true">
-                <p className="scene__kpi-label">KPI attainment</p>
-                <p className="scene__kpi-value">
-                  92<small>%</small>
-                </p>
-                <div className="scene__bars">
-                  <i style={{ '--h': '38%' }} />
-                  <i style={{ '--h': '56%' }} />
-                  <i style={{ '--h': '48%' }} />
-                  <i style={{ '--h': '74%' }} />
-                  <i style={{ '--h': '92%' }} />
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </li>
 
-        <div className="container">
-          <ul className="proof" aria-label="Results in numbers">
-            {STATS.map(({ value, label }) => (
-              <li key={value}>
-                <span className="proof__value">{value}</span>
-                <span className="proof__label">{label}</span>
-              </li>
-            ))}
+            <li className="tile tilt tile--blue">
+              <p className="tile__label">Kickoff to MVP</p>
+              <p className="tile__value">1 month</p>
+              <p className="tile__desc">From kickoff to a working GovChain Permit MVP, leading a team of four</p>
+              <div className="tile__art art-permit" aria-hidden="true">
+                <div className="permit permit--back" />
+                <div className="permit">
+                  <i /><i /><i /><i /><i />
+                  <b>Verified</b>
+                </div>
+              </div>
+            </li>
+
+            <li className="tile tilt tile--based">
+              <p className="tile__label">Based in</p>
+              <p className="tile__desc">Perak, Malaysia and Surabaya, Indonesia</p>
+              <div className="tile__art art-globe" aria-hidden="true">
+                <i /><i />
+              </div>
+            </li>
+
+            <li className="tile tilt tile--speaks">
+              <p className="tile__label">Speaks</p>
+              <p className="tile__desc">English (IELTS 7.0), Bahasa Indonesia, Bahasa Melayu</p>
+              <div className="tile__art art-bubbles" aria-hidden="true">
+                <i>EN</i><i>ID</i><i>MS</i>
+              </div>
+            </li>
+
+            <li className="tile tilt tile--grey">
+              <p className="tile__label">National case competition</p>
+              <p className="tile__value">2nd of 300+</p>
+              <p className="tile__desc">Telkomsel × IS Expo 2025 national business case competition</p>
+              <div className="tile__art art-podium" aria-hidden="true">
+                <i style={{ '--h': '62px' }} /><i style={{ '--h': '88px' }} /><i style={{ '--h': '42px' }} />
+              </div>
+            </li>
+
+            <li className="tile tilt tile--orange">
+              <p className="tile__label">Finalist</p>
+              <p className="tile__value">Top 12 of 263</p>
+              <p className="tile__desc">Teams at the Travoy Jasamarga × Marketeers WOW Case Competition</p>
+              <div className="tile__art art-coins" aria-hidden="true">
+                <i style={{ '--x': '0px', '--y': '44px' }} />
+                <i style={{ '--x': '6px', '--y': '28px' }} />
+                <i style={{ '--x': '-2px', '--y': '10px' }} />
+              </div>
+            </li>
+
+            <li className="tile tilt tile--ink">
+              <p className="tile__label">Reach</p>
+              <p className="tile__value">400K+</p>
+              <p className="tile__desc">Views on videos I produced for Jakarta International MUN</p>
+              <div className="tile__art art-play" aria-hidden="true" />
+            </li>
+
+            <li className="tile tilt tile--study">
+              <p className="tile__label">Studying</p>
+              <ul className="study">
+                {STUDY.map(({ uni, note, cgpa }) => (
+                  <li key={uni}>
+                    <span className="study__uni">
+                      {uni}
+                      <small>{note}</small>
+                    </span>
+                    <span className="study__cgpa">CGPA {cgpa}</span>
+                  </li>
+                ))}
+              </ul>
+            </li>
+
+            <li className="tile tilt tile--tools">
+              <p className="tile__label">Works with</p>
+              <ul className="keys">
+                {TOOLS.map((tool) => (
+                  <li key={tool}>{tool}</li>
+                ))}
+              </ul>
+            </li>
           </ul>
         </div>
       </section>
 
-      <section className="partners" aria-label="Collaborated with and studied at">
-        <p className="mono-label partners__label">Collaborated With &amp; Studied At</p>
-        <div className="marquee">
-          <div className="marquee__track">
-            {PARTNERS.map((p) => (
-              <img key={p.name} className="marquee__logo" src={p.logo} alt={p.name} title={p.name} />
-            ))}
-          </div>
-          <div className="marquee__track" aria-hidden="true">
-            {PARTNERS.map((p) => (
-              <img key={p.name} className="marquee__logo" src={p.logo} alt="" />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section id="work" className="section section--fg">
-        <Blocks3D variant="pair" className="blocks--float blocks--right" />
+      <section id="work" className="section">
         <div className="container">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">01</span>Selected Work</p>
@@ -334,8 +403,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="about" className="section section--fg">
-        <Blocks3D variant="pair" className="blocks--float blocks--left" />
+      <section id="about" className="section">
         <div className="container about">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">03</span>About</p>
@@ -365,9 +433,9 @@ export default function HomePage() {
             <p className="mono-label about__label">Outside classes</p>
             <ul className="bento">
               {HOBBIES.map(({ name, Icon, desc }) => (
-                <li key={name} className="card bento__cell">
+                <li key={name} className="card tilt bento__cell">
                   <div className="bento__top" aria-hidden="true">
-                    <Icon size={20} />
+                    <Icon size={22} />
                   </div>
                   <h3 className="card__title">{name}</h3>
                   <p className="card__text">{desc}</p>
@@ -378,8 +446,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="contact" className="section section--subtle section--fg">
-        <Blocks3D variant="pair" className="blocks--float blocks--right" />
+      <section id="contact" className="section section--subtle">
         <div className="container contact">
           <div className="section-head">
             <p className="eyebrow"><span className="eyebrow__num" aria-hidden="true">04</span>Connect</p>
@@ -393,6 +460,7 @@ export default function HomePage() {
           <ContactGate />
         </div>
       </section>
+      </div>
     </>
   );
 }

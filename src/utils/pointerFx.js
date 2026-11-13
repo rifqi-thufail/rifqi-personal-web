@@ -1,6 +1,6 @@
 // Pointer-driven polish, delegated from the document so pages need no wiring:
 //  - `.card`            → --mx / --my (px) for the spotlight border and glow
-//  - `.card.tilt`       → --rx / --ry (-1..1) for the perspective tilt
+//  - `.tilt`            → --rx / --ry (-1..1) for the perspective tilt (cards, bento tiles)
 //  - `[data-parallax]`  → --px / --py (-1..1) for backdrop depth layers
 // Disabled on touch / coarse pointers and under prefers-reduced-motion.
 export function initPointerFx() {
@@ -23,7 +23,7 @@ export function initPointerFx() {
     if (!last) return;
     const { x, y, target } = last;
 
-    const card = target instanceof Element ? target.closest('.card') : null;
+    const card = target instanceof Element ? target.closest('.card, .tile') : null;
     if (card !== activeCard) releaseCard();
     if (card) {
       activeCard = card;
