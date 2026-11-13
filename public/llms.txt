@@ -1,0 +1,54 @@
+# Rifqi Aufa Thufail
+
+> Rifqi Aufa Thufail is an Information Systems student on a dual-degree track between Universiti Teknologi PETRONAS (Malaysia) and Institut Teknologi Sepuluh Nopember (Indonesia). He leads small teams building data analytics, blockchain and SAP ERP systems, and is available for an internship from September 2026 to April 2027. This file is the plain-text summary of his personal site, https://thufail.dev.
+
+## Quick facts
+
+- Full name: Rifqi Aufa Thufail (also written Rifqi Thufail)
+- Based in: Perak, Malaysia and Surabaya, Indonesia
+- Focus: big data analytics, business intelligence, blockchain systems, SAP ERP, enterprise architecture
+- Languages: English (IELTS 7.0), Bahasa Indonesia (native), Bahasa Melayu
+- Contact: rifqi_26000130@utp.edu.my · https://linkedin.com/in/rifqiaufathufail/
+- Availability: internship, September 2026 – April 2027
+
+## Education
+
+- Universiti Teknologi PETRONAS (UTP), Perak, Malaysia — Bachelor of Information Systems (Hons), specialisation in Big Data Analytics, minor in Corporate Management. August 2023 – present. CGPA 3.52/4.0, Dean's List.
+- Institut Teknologi Sepuluh Nopember (ITS), Surabaya, Indonesia — Bachelor of Information Systems. August 2023 – present. CGPA 3.56/4.0.
+
+## Experience
+
+- GovChain Permit, Indonesia Blockchain Center — Tech Lead and UX Designer, August – December 2025. Led a team of four to an MVP in one month. Decentralised permit issuance using ERC-721 smart contracts on Base, IPFS storage and QR verification, designed to integrate with Surabaya City Government's SSW Alfa system; up to 95% improvement in verification speed and accuracy. Presented to Dubai Blockchain Center representatives and Surabaya City Government.
+- FarmSync, Indonesia Blockchain Center — Project Lead, September – November 2025. Blockchain architecture for a transparent palm oil supply chain integrating ESP32 IoT sensors, EVM smart contracts and MQTT/REST middleware. Smart-contract settlement for crude palm oil transactions targeting a reduction from T+7–14 days to under one hour.
+- Carbon Addons, Do Well Do Good ITS client project — Analyst, March – December 2024. Carbon offset API integration model for Surabaya's GoBis public transport app; awarded "Best Client Project".
+
+## Projects
+
+- Balanced Scorecard KPI dashboard for PT United Tractors (UNTR) — Team Leader, October – November 2025. Two-tier Power BI dashboard (strategic HQ and operational branch) built by a six-person team. https://thufail.dev/portfolio/untr-balanced-scorecard/
+- Enterprise Architecture consulting project for Velox Bicycles — Team Leader, February – April 2026. EA Transformation and Communication Plan delivered by a four-person team. https://thufail.dev/portfolio/velox-bicycles-ea/
+
+## Awards
+
+- 2nd place, Telkomsel × Information Systems Expo 2025, a national business case competition with 300+ participants (October 2025). Entry: J.E.L.A.S, a five-layer ESG IT solution on SAP BTP with a carbon MRV engine covering Scope 1, 2 and 3 emissions, aligned with IFRS S1 and S2.
+- Finalist, top 12 of 263 teams, Travoy Jasamarga × Marketeers WOW Case Competition, held by MarkPlus Inc. (May 2026). Entry: R.O.U.T.E. integrated marketing strategy for the Travoy app.
+- 1st place, Best Expo Stand, Agile Innovation Expo ITS Information Systems 2024.
+- ISCOM Game Application Development 2024 finalist.
+
+## Leadership
+
+- Do Well Do Good ITS — Director of Media, Marketing and Communications, May 2025 – February 2026. Grew Instagram to 551.4K total views, 41.9K reach and 25K profile visits over nine months.
+- Jakarta International Model United Nations (JMUN) — Staff, Documentation and Videos, 2024. Produced three long-form YouTube videos, one with the United Nations Association Indonesia; 400K+ views across JMUN channels.
+
+## Skills and certifications
+
+- Python, JavaScript, React, HTML/CSS, Linux, RStudio
+- Microsoft Power BI and DAX, SAP S/4HANA ERP (SD, MM, PP), Figma
+- Blockchain: EVM smart contracts, ERC-721, Base, IPFS
+- Certifications: AWS Cloud Practitioner Essentials, Alibaba Cloud (MySQL and Cloud Developer), Introduction to SAP S/4HANA with GBI 4.2, RevoU Intro to Software Engineering, MarkPlus Institute bluChamp Business Plan
+
+## Pages
+
+- [Home](https://thufail.dev/): introduction, selected work, awards, about, contact
+- [Experience & Education](https://thufail.dev/experience/): degrees, roles and leadership in detail
+- [Portfolio & Projects](https://thufail.dev/portfolio/): project case studies
+- [Skills & Certifications](https://thufail.dev/skills/): technical stack, certifications, languages

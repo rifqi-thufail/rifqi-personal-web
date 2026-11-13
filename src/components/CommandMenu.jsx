@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Check, ExternalLink, Mail, Moon, Search, Sparkles, Sun, X } from 'lucide-react';
-import confetti from 'canvas-confetti';
 import { CONTACT } from '../data/site';
 import { copyToClipboard } from '../utils/clipboard';
 
@@ -91,7 +90,8 @@ function Palette({ onClose, onNavigate, onContact, onToggleTheme, theme }) {
         label: 'Trigger Confetti',
         category: 'Fun',
         icon: <Sparkles size={15} />,
-        action: () => {
+        action: async () => {
+          const { default: confetti } = await import('canvas-confetti');
           confetti({
             particleCount: 100,
             spread: 70,

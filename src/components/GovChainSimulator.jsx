@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Cpu, Database, Loader2, Play, QrCode, RotateCcw, ShieldCheck } from 'lucide-react';
-import confetti from 'canvas-confetti';
 
 const STEPS = [
   { label: 'Metadata Validation', desc: 'Analyzing license metadata for SSW Alfa integration', Icon: ShieldCheck },
@@ -42,6 +41,7 @@ export default function GovChainSimulator() {
     // Step 3: QR code verification
     setCurrentStep(3);
     setStatus('verified');
+    const { default: confetti } = await import('canvas-confetti');
     confetti({
       particleCount: 80,
       spread: 60,

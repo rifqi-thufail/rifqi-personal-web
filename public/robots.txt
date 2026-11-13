@@ -1,0 +1,7 @@
+# thufail.dev — personal site of Rifqi Aufa Thufail.
+# Everything here is public and may be crawled, indexed and cited,
+# including by AI assistants and search agents.
+User-agent: *
+Allow: /
+
+Sitemap: https://thufail.dev/sitemap.xml

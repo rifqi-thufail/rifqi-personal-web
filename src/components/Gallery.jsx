@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useIsClient, useMediaQuery } from '../utils/client';
 import { ChevronLeft, ChevronRight, Image as ImageIcon, X } from 'lucide-react';
 
 const IMAGES = [
@@ -120,19 +121,13 @@ function Lightbox({ index, onClose, onStep }) {
 export default function Gallery() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
-  const [narrow, setNarrow] = useState(() => window.matchMedia(NARROW_QUERY).matches);
+  const narrow = useMediaQuery(NARROW_QUERY);
+  const mounted = useIsClient(); // portals are client-only
   const dragged = useRef(false);
 
   const closeLightbox = useCallback(() => setLightboxIndex(null), []);
   const stepLightbox = useCallback((delta) => {
     setLightboxIndex((i) => (i === null ? i : (i + delta + IMAGES.length) % IMAGES.length));
-  }, []);
-
-  useEffect(() => {
-    const mq = window.matchMedia(NARROW_QUERY);
-    const onChange = (e) => setNarrow(e.matches);
-    mq.addEventListener('change', onChange);
-    return () => mq.removeEventListener('change', onChange);
   }, []);
 
   const prev = () => setActiveIndex((i) => Math.max(0, i - 1));
@@ -216,7 +211,7 @@ export default function Gallery() {
                 }
               }}
             >
-              <img src={img.src} alt={img.title} draggable={false} />
+              <img src={img.src} alt={`${img.title} — ${img.desc}`} loading="lazy" draggable={false} />
               {isActive && <span className="gallery__hint">Click to Zoom</span>}
             </motion.div>
           );
@@ -233,7 +228,7 @@ export default function Gallery() {
         </button>
       </div>
 
-      {createPortal(
+      {mounted && createPortal(
         <AnimatePresence>
           {lightboxIndex !== null && (
             <Lightbox

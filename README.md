@@ -1,16 +1,26 @@
-# React + Vite
+# thufail.dev
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Personal site of Rifqi Aufa Thufail. React + Vite, deployed to GitHub Pages on every push to `main`.
 
-Currently, two official plugins are available:
+## Commands
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- `npm run dev` — local dev server
+- `npm run build` — client build, then prerender every route to static HTML
+- `npm run preview` — serve the production build locally
+- `npm run lint`
 
-## React Compiler
+## How it is built
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The site is a single React app with real URL paths (`/`, `/experience/`, `/portfolio/`,
+`/portfolio/<id>/`, `/skills/`). `npm run build` renders each route to its own `index.html`
+(`scripts/prerender.mjs`) so search engines and language models get the full text without
+running JavaScript, and the browser hydrates that markup.
 
-## Expanding the ESLint configuration
+SEO lives in three places:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `src/router.js` — routes plus the `<title>` and description for each page
+- `scripts/prerender.mjs` — canonical URLs, Open Graph / Twitter tags, JSON-LD and `sitemap.xml`
+- `public/robots.txt`, `public/llms.txt`, `public/og.png` — static files
+
+When a project is added to `src/data/portfolioData.js` it gets a page and a sitemap entry
+automatically. Update `public/llms.txt` by hand when the content changes.

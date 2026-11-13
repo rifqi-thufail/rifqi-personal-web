@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ArrowRight, Menu, Moon, Search, Sun, X } from 'lucide-react';
 import { NAV } from '../data/site';
-
-const IS_MAC = typeof navigator !== 'undefined' && /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
+import { useIsMac } from '../utils/client';
 
 export default function Header({ activePage, theme, onToggleTheme, onOpenCommandMenu, onContact }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const isMac = useIsMac();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -40,7 +40,7 @@ export default function Header({ activePage, theme, onToggleTheme, onOpenCommand
   return (
     <header className={`site-header${scrolled || mobileOpen ? ' is-scrolled' : ''}`}>
       <div className="container site-header__inner">
-        <a href="#" className="brand" onClick={closeMobile} aria-label="thufail.dev — home">
+        <a href="/" className="brand" onClick={closeMobile} aria-label="thufail.dev — home">
           <span className="brand__mark" aria-hidden="true" />
           <span>thufail.dev</span>
         </a>
@@ -62,16 +62,16 @@ export default function Header({ activePage, theme, onToggleTheme, onOpenCommand
           <button type="button" className="search-btn" onClick={onOpenCommandMenu} aria-label="Open command menu">
             <Search size={14} aria-hidden="true" />
             <span>Search</span>
-            <kbd>{IS_MAC ? '⌘K' : 'Ctrl K'}</kbd>
+            <kbd>{isMac ? '⌘K' : 'Ctrl K'}</kbd>
           </button>
 
           <button type="button" className="icon-btn" onClick={onToggleTheme} aria-label={themeLabel} title={themeLabel}>
             {theme === 'dark' ? <Sun size={17} aria-hidden="true" /> : <Moon size={17} aria-hidden="true" />}
           </button>
 
-          <button type="button" className="btn btn-hot btn-sm site-header__cta" onClick={onContact}>
+          <a className="btn btn-hot btn-sm site-header__cta" href="/#contact">
             Let&rsquo;s talk <ArrowRight size={14} aria-hidden="true" />
-          </button>
+          </a>
 
           <button
             type="button"

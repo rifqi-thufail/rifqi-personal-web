@@ -12,7 +12,7 @@ function ProjectList() {
       <section className="section">
         <div className="container grid grid--2">
           {PROJECTS.map((proj) => (
-            <a key={proj.id} href={`#portfolio/${proj.id}`} className="card tilt project-card">
+            <a key={proj.id} href={`/portfolio/${proj.id}/`} className="card tilt project-card">
               {proj.image && (
                 <div className="project-card__media">
                   <img src={proj.image} alt={proj.title} loading="lazy" />
@@ -45,8 +45,8 @@ function ProjectDetail({ project }) {
       <PageHeader
         title={project.title}
         lead={
-          <a href="#portfolio" className="back-link">
-            <ArrowLeft size={16} aria-hidden="true" /> Back to Portfolios
+          <a href="/portfolio/" className="back-link">
+            <ArrowLeft size={16} aria-hidden="true" /> Back to portfolio
           </a>
         }
         footer={

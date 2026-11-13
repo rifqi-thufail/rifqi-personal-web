@@ -11,40 +11,22 @@ import ExperiencePage from './pages/ExperiencePage';
 import PortfolioPage from './pages/PortfolioPage';
 import SkillsPage from './pages/SkillsPage';
 
+import NotFoundPage from './pages/NotFoundPage';
+
 import { initPointerFx } from './utils/pointerFx';
-
-const PAGES = ['home', 'experience', 'portfolio', 'skills'];
-
-// Hash routes: '' (home), #experience, #portfolio, #portfolio/<id>, #skills, #contact
-function parseHash() {
-  const raw = window.location.hash.replace(/^#\/?/, '');
-  const [page, ...rest] = raw.split('/');
-  if (page === 'portfolio') {
-    return { page, projectId: rest.join('/') || null, contact: false };
-  }
-  if (PAGES.includes(page)) return { page, projectId: null, contact: false };
-  return { page: 'home', projectId: null, contact: page === 'contact' };
-}
-
-function getInitialTheme() {
-  try {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || stored === 'light') return stored;
-  } catch {
-    // Storage unavailable (private mode etc.) — fall back to the default.
-  }
-  return 'dark';
-}
+import { setTheme, useTheme } from './utils/theme';
+import { legacyHashPath, metaFor, parsePath, pathFor } from './router';
 
 function prefersReducedMotion() {
   return window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 }
 
-// The home page may still be mounting (page transition), so retry briefly.
-function scrollToContact() {
+// The target page may still be mounting (page transition), so retry briefly.
+function scrollToHash(hash) {
+  const id = hash.replace(/^#/, '');
   let tries = 0;
   const tick = () => {
-    const el = document.getElementById('contact');
+    const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: prefersReducedMotion() ? 'auto' : 'smooth', block: 'start' });
     } else if (tries++ < 40) {
@@ -54,39 +36,67 @@ function scrollToContact() {
   tick();
 }
 
-export default function App() {
-  const [route, setRoute] = useState(parseHash);
-  const [theme, setTheme] = useState(getInitialTheme);
+export default function App({ initialPath = '/' }) {
+  const [route, setRoute] = useState(() => parsePath(initialPath));
+  const theme = useTheme();
   const [cmdOpen, setCmdOpen] = useState(false);
   const [showTop, setShowTop] = useState(false);
 
   const { page, projectId } = route;
 
-  // Keep the route in sync with the URL hash (deep links, back/forward).
-  useEffect(() => {
-    const onHashChange = () => {
-      const next = parseHash();
-      setRoute(next);
-      if (next.contact) scrollToContact();
-    };
-    window.addEventListener('hashchange', onHashChange);
-    if (parseHash().contact) scrollToContact();
-    return () => window.removeEventListener('hashchange', onHashChange);
+  // Client-side navigation between the prerendered pages.
+  const go = useCallback((pathname, hash = '') => {
+    if (pathname !== window.location.pathname) {
+      window.history.pushState(null, '', pathname + hash);
+      setRoute(parsePath(pathname));
+    } else if (!hash) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+    if (hash) scrollToHash(hash);
   }, []);
 
-  // Start every page at the top.
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-  }, [page, projectId]);
+    if (window.location.hash.length > 1) scrollToHash(window.location.hash);
 
+    const onPopState = () => setRoute(parsePath(window.location.pathname));
+
+    // Old hash-router links (#experience, #portfolio/<id>, …) followed while the site is open.
+    const onHashChange = () => {
+      const legacy = legacyHashPath(window.location.hash);
+      if (!legacy) return;
+      window.history.replaceState(null, '', legacy);
+      setRoute(parsePath(legacy));
+    };
+
+    // Same-origin page links are handled in place; everything else is left alone.
+    const onClick = (e) => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const link = e.target instanceof Element ? e.target.closest('a[href]') : null;
+      if (!link || link.target || link.hasAttribute('download')) return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (parsePath(url.pathname).page === 'notfound') return;
+      // In-page anchors scroll natively.
+      if (url.pathname === window.location.pathname && url.hash) return;
+      e.preventDefault();
+      go(url.pathname, url.hash);
+    };
+
+    window.addEventListener('popstate', onPopState);
+    window.addEventListener('hashchange', onHashChange);
+    document.addEventListener('click', onClick);
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+      window.removeEventListener('hashchange', onHashChange);
+      document.removeEventListener('click', onClick);
+    };
+  }, [go]);
+
+  // Start every page at the top, with its own title.
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-    try {
-      localStorage.setItem('theme', theme);
-    } catch {
-      // Ignore storage failures; the theme still applies for this session.
-    }
-  }, [theme]);
+    document.title = metaFor({ page, projectId }).title;
+    if (!window.location.hash) window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [page, projectId]);
 
   // Card spotlight / tilt and backdrop parallax.
   useEffect(() => initPointerFx(), []);
@@ -111,23 +121,13 @@ export default function App() {
   const toggleTheme = useCallback(() => {
     const root = document.documentElement;
     root.classList.add('theme-transitioning');
-    setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'));
+    setTheme(root.getAttribute('data-theme') === 'light' ? 'dark' : 'light');
     setTimeout(() => root.classList.remove('theme-transitioning'), 350);
   }, []);
 
-  const navigate = useCallback((target) => {
-    const hash = target === 'home' ? '' : `#${target}`;
-    if (window.location.hash === hash || (hash === '' && window.location.hash === '#')) {
-      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
-      return;
-    }
-    window.location.hash = hash;
-  }, []);
+  const navigate = useCallback((target) => go(pathFor(target)), [go]);
 
-  const goToContact = useCallback(() => {
-    if (parseHash().page !== 'home') window.location.hash = '';
-    scrollToContact();
-  }, []);
+  const goToContact = useCallback(() => go('/', '#contact'), [go]);
 
   const closeCmd = useCallback(() => setCmdOpen(false), []);
 
@@ -142,8 +142,11 @@ export default function App() {
     case 'skills':
       content = <SkillsPage />;
       break;
+    case 'notfound':
+      content = <NotFoundPage />;
+      break;
     default:
-      content = <HomePage onContact={goToContact} />;
+      content = <HomePage />;
   }
 
   return (
@@ -187,7 +190,7 @@ export default function App() {
           </AnimatePresence>
         </main>
 
-        <Footer onContact={goToContact} />
+        <Footer />
 
         <AnimatePresence>
           {showTop && (

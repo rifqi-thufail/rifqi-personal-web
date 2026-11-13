@@ -5,9 +5,9 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist', 'scratch']),
+  globalIgnores(['dist', 'dist-ssr', 'scratch']),
   {
-    files: ['**/*.{js,jsx}'],
+    files: ["**/*.{js,jsx,mjs}"],
     extends: [
       js.configs.recommended,
       reactHooks.configs.flat.recommended,
@@ -17,5 +17,11 @@ export default defineConfig([
       globals: globals.browser,
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
+  },
+  {
+    // Build-time only: the server entry and the prerender script run in Node.
+    files: ['src/entry-server.jsx', 'scripts/**/*.mjs'],
+    languageOptions: { globals: globals.node },
+    rules: { 'react-refresh/only-export-components': 'off' },
   },
 ])

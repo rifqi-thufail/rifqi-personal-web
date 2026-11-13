@@ -1,19 +1,19 @@
 import { CONTACT, NAV } from '../data/site';
 import { PROJECTS } from '../data/portfolioData';
 
-export default function Footer({ onContact }) {
+export default function Footer() {
   return (
     <footer className="site-footer">
       <div className="container">
         <div className="site-footer__grid">
           <div className="site-footer__brand">
-            <a href="#" className="brand" aria-label="thufail.dev — home">
+            <a href="/" className="brand" aria-label="thufail.dev — home">
               <span className="brand__mark" aria-hidden="true" />
               <span>thufail.dev</span>
             </a>
             <p>
-              Rifqi Aufa Thufail — Information Systems student specialising in Big Data Analytics,
-              Blockchain Architecture, and SAP ERP.
+              Rifqi Aufa Thufail — Information Systems student building data analytics, blockchain and
+              SAP ERP systems across Malaysia and Indonesia.
             </p>
             <p className="site-footer__loc">Perak, Malaysia</p>
           </div>
@@ -31,7 +31,7 @@ export default function Footer({ onContact }) {
             <h2>Projects</h2>
             <ul>
               {PROJECTS.map((p) => (
-                <li key={p.id}><a href={`#portfolio/${p.id}`}>{p.subtitle}</a></li>
+                <li key={p.id}><a href={`/portfolio/${p.id}/`}>{p.subtitle}</a></li>
               ))}
             </ul>
           </nav>
@@ -41,8 +41,9 @@ export default function Footer({ onContact }) {
             <ul>
               <li><a href={`mailto:${CONTACT.email}`}>Email</a></li>
               <li><a href={CONTACT.whatsappUrl} target="_blank" rel="noreferrer">WhatsApp</a></li>
-              <li><a href={CONTACT.linkedinUrl} target="_blank" rel="noreferrer">LinkedIn</a></li>
-              <li><button type="button" onClick={onContact}>All contact details</button></li>
+              <li><a href={CONTACT.linkedinUrl} target="_blank" rel="me noreferrer">LinkedIn</a></li>
+              <li><a href={CONTACT.githubUrl} target="_blank" rel="me noreferrer">GitHub</a></li>
+              <li><a href="/#contact">All contact details</a></li>
             </ul>
           </div>
         </div>
