@@ -432,13 +432,6 @@ html.theme-transitioning *::after {
   perspective: 900px;
 }
 
-.blocks--hero {
-  top: calc(var(--header-h) - 12px);
-  right: max(-40px, calc((100vw - var(--container)) / 2 - 150px));
-  scale: 0.85;
-  transform-origin: 100% 0;
-}
-
 .blocks--header {
   top: 50%;
   right: max(0px, calc((100vw - var(--container)) / 2));
@@ -570,11 +563,6 @@ html.theme-transitioning *::after {
     opacity: 0.45;
     scale: 0.6;
     transform-origin: 100% 0;
-  }
-
-  .blocks--hero {
-    top: calc(var(--header-h) - 8px);
-    right: -70px;
   }
 
   .blocks--header {
@@ -1406,8 +1394,8 @@ html.theme-transitioning *::after {
 
 .hero__grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
-  align-items: end;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: center;
   gap: clamp(var(--space-6), 5vw, 72px);
 }
 
@@ -1427,6 +1415,281 @@ html.theme-transitioning *::after {
   from {
     opacity: 0;
     transform: translateY(16px);
+  }
+}
+
+/* Hero scene: the fact sheet is the front panel of a small tilted 3D stack —
+   a paper permit behind it, with a chip, a token and a KPI tile floating in
+   front. The stage leans with the pointer (--px / --py from pointerFx.js). */
+.scene {
+  position: relative;
+  padding: 112px 8px 124px 64px;
+  perspective: 1400px;
+}
+
+.scene__stage {
+  position: relative;
+  transform-style: preserve-3d;
+  transform: rotateX(calc(5deg + var(--py, 0) * -4deg)) rotateY(calc(-13deg + var(--px, 0) * 7deg));
+  transition: transform 0.6s var(--ease);
+}
+
+.scene__panel {
+  box-shadow: var(--shadow-xl);
+}
+
+.scene__doc,
+.scene__chip,
+.scene__coin,
+.scene__kpi {
+  position: absolute;
+  pointer-events: none;
+  animation: bob var(--bob, 6s) ease-in-out var(--bob-delay, 0s) infinite alternate;
+}
+
+@keyframes bob {
+  to {
+    translate: 0 -10px;
+  }
+}
+
+/* Paper permit, tucked behind the panel. Paper stays light in both themes. */
+.scene__doc {
+  --bob: 7s;
+  top: -108px;
+  left: -62px;
+  width: 210px;
+  height: 270px;
+  padding: 16px;
+  color: #1b2a55;
+  background: linear-gradient(160deg, #ffffff, #dfe7f8);
+  border: 1px solid #c6d1ea;
+  border-radius: 6px;
+  box-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.6);
+  transform: translateZ(-70px) rotate(-7deg);
+}
+
+.scene__doc-head,
+.scene__doc-body {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.scene__doc-seal {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  background: var(--blue);
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 5px #ffffff, inset 0 0 0 6px var(--blue);
+}
+
+.scene__doc-lines {
+  display: grid;
+  flex: 1;
+  gap: 5px;
+}
+
+.scene__doc-lines i {
+  height: 4px;
+  background: #b9c5e2;
+  border-radius: 2px;
+}
+
+.scene__doc-lines i:nth-child(even) {
+  width: 68%;
+}
+
+.scene__doc-title {
+  margin-block: 14px 12px;
+  padding-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-top: 1.5px solid #1b2a55;
+}
+
+/* A QR-ish block drawn with two layered patterns. */
+.scene__qr {
+  flex: none;
+  width: 54px;
+  height: 54px;
+  background:
+    conic-gradient(#1b2a55 25%, transparent 0 50%, #1b2a55 0 75%, transparent 0) 0 0 / 12px 12px,
+    conic-gradient(transparent 25%, #1b2a55 0 50%, transparent 0) 3px 0 / 18px 18px;
+  border: 3px solid #1b2a55;
+  border-radius: 3px;
+}
+
+.scene__stamp {
+  position: absolute;
+  top: 44px;
+  right: 10px;
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--red);
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+  outline: 1px solid currentColor;
+  outline-offset: -5px;
+  opacity: 0.8;
+  rotate: 14deg;
+}
+
+.scene__chip {
+  --bob: 5s;
+  --bob-delay: -2s;
+  top: -22px;
+  right: -14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  white-space: nowrap;
+  color: #0b1530;
+  background: #ffffff;
+  border: 1px solid rgba(11, 21, 48, 0.1);
+  border-radius: 999px;
+  box-shadow: 0 14px 28px -10px rgba(0, 0, 0, 0.6);
+  transform: translateZ(90px) rotate(-3deg);
+}
+
+.scene__chip-dot {
+  width: 7px;
+  height: 7px;
+  background: #19b36b;
+  border-radius: 50%;
+  box-shadow: 0 0 0 3px rgba(25, 179, 107, 0.22);
+}
+
+/* Token: a thick coin that rocks from side to side. */
+.scene__coin {
+  --bob: 4.5s;
+  --bob-delay: -1s;
+  bottom: 84px;
+  left: -44px;
+  width: 72px;
+  height: 72px;
+  transform: translateZ(110px);
+}
+
+.scene__coin span {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(circle at 32% 28%, #ffffff, #cfd9f2 62%, #9db0dd);
+  border-radius: 50%;
+  box-shadow:
+    4px 3px 0 #8296c8,
+    7px 5px 0 #6f84ba,
+    14px 26px 30px -8px rgba(0, 0, 0, 0.65);
+  animation: rock 5s ease-in-out infinite alternate;
+}
+
+.scene__coin span::after {
+  content: '';
+  width: 28px;
+  height: 28px;
+  background: var(--blue);
+  border-radius: 8px;
+  box-shadow: inset 0 -3px 0 rgba(0, 0, 0, 0.18);
+}
+
+@keyframes rock {
+  from {
+    transform: rotateY(-28deg) rotate(-8deg);
+  }
+
+  to {
+    transform: rotateY(24deg) rotate(6deg);
+  }
+}
+
+.scene__kpi {
+  --bob: 6.5s;
+  --bob-delay: -3s;
+  right: 18px;
+  bottom: -118px;
+  width: 168px;
+  padding: 14px;
+  background: linear-gradient(180deg, var(--surface-hi), var(--bg-muted));
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  transform: translateZ(70px) rotate(3deg);
+}
+
+.scene__kpi-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.scene__kpi-value {
+  font-size: 1.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.04em;
+  color: var(--text);
+}
+
+.scene__kpi-value small {
+  margin-left: 2px;
+  font-size: 0.75rem;
+  color: var(--text-3);
+}
+
+.scene__bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 44px;
+  margin-top: 8px;
+}
+
+.scene__bars i {
+  flex: 1;
+  height: var(--h);
+  background: linear-gradient(180deg, var(--blue-hover), var(--blue));
+  border-radius: 3px 3px 0 0;
+}
+
+.scene__bars i:last-child {
+  background: linear-gradient(180deg, var(--red-hover), var(--red));
+}
+
+@media (max-width: 1000px) {
+  .scene {
+    max-width: 520px;
+    padding: 108px 20px 128px 36px;
+  }
+
+  .scene__stage {
+    transform: rotateX(3deg) rotateY(-7deg);
+  }
+
+  .scene__doc {
+    left: -24px;
+  }
+
+  .scene__coin {
+    left: -26px;
+    scale: 0.8;
   }
 }
 
@@ -2921,7 +3184,12 @@ html.theme-transitioning *::after {
   }
 
   .cube,
-  .cube__spin {
+  .cube__spin,
+  .scene__doc,
+  .scene__chip,
+  .scene__coin,
+  .scene__coin span,
+  .scene__kpi {
     animation: none;
   }
 

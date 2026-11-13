@@ -122,7 +122,6 @@ export default function HomePage() {
     <>
       <section className="hero" data-parallax>
         <div className="backdrop" aria-hidden="true" />
-        <Blocks3D className="blocks--hero" />
         <div className="container hero__grid">
           <div className="hero__copy">
             <p className="pill rise">
@@ -156,17 +155,66 @@ export default function HomePage() {
             </div>
           </div>
 
-          <aside className="card facts rise" style={{ '--d': '200ms' }} aria-label="Rifqi at a glance">
-            <p className="mono-label facts__label">At a glance</p>
-            <dl className="facts__list">
-              {FACTS.map(({ term, detail }) => (
-                <div key={term} className="facts__row">
-                  <dt>{term}</dt>
-                  <dd>{detail}</dd>
+          <div className="scene rise" style={{ '--d': '200ms' }}>
+            <div className="scene__stage">
+              {/* Decorative layers around the fact sheet: a permit, a chip, a token, a KPI tile. */}
+              <div className="scene__doc" aria-hidden="true">
+                <div className="scene__doc-head">
+                  <span className="scene__doc-seal" />
+                  <span className="scene__doc-lines">
+                    <i />
+                    <i />
+                  </span>
                 </div>
-              ))}
-            </dl>
-          </aside>
+                <p className="scene__doc-title">Business Permit</p>
+                <div className="scene__doc-body">
+                  <span className="scene__qr" />
+                  <span className="scene__doc-lines">
+                    <i />
+                    <i />
+                    <i />
+                    <i />
+                  </span>
+                </div>
+                <span className="scene__stamp">Verified</span>
+              </div>
+
+              <aside className="card facts scene__panel" aria-label="Rifqi at a glance">
+                <p className="mono-label facts__label">At a glance</p>
+                <dl className="facts__list">
+                  {FACTS.map(({ term, detail }) => (
+                    <div key={term} className="facts__row">
+                      <dt>{term}</dt>
+                      <dd>{detail}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </aside>
+
+              <p className="scene__chip" aria-hidden="true">
+                <span className="scene__chip-dot" />
+                Verified on-chain
+              </p>
+
+              <div className="scene__coin" aria-hidden="true">
+                <span />
+              </div>
+
+              <div className="scene__kpi" aria-hidden="true">
+                <p className="scene__kpi-label">KPI attainment</p>
+                <p className="scene__kpi-value">
+                  92<small>%</small>
+                </p>
+                <div className="scene__bars">
+                  <i style={{ '--h': '38%' }} />
+                  <i style={{ '--h': '56%' }} />
+                  <i style={{ '--h': '48%' }} />
+                  <i style={{ '--h': '74%' }} />
+                  <i style={{ '--h': '92%' }} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="container">
